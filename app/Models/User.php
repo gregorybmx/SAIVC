@@ -18,9 +18,15 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'id',
         'name',
+        'last_name',
+        'role',
         'email',
         'password',
+        'created_at',
+        'updated_at',
+        'remember_token',
     ];
 
     /**
@@ -41,4 +47,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function FacturVenta(){
+        return $this->hasMany('App\Models\FacturaVenta');
+    }
 }
