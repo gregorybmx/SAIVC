@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\FacturaVentaController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,7 +14,9 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::prefix('api')->group(function(){
 
-Route::get('/', function () {
-    return view('welcome');
+
+    //Rutas Automaticas RESTful
+    Route::resource('/facturaventa', FacturaVentaController::class);
 });
