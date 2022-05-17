@@ -8,4 +8,21 @@ use Illuminate\Database\Eloquent\Model;
 class Producto extends Model
 {
     use HasFactory;
+    protected $table='productos';
+
+    protected $fillable=[
+        'codigo',
+        'descripcion',
+        'precio_compra',
+        'porcentaje_ganancia',
+        'precio_venta',
+        'cantidadMinima',
+        'stock'
+];
+
+public function detalleFacturaVenta(){
+    return $this->hasMany('App\Models\DetalleFacturasVenta');
+}
+
+
 }
