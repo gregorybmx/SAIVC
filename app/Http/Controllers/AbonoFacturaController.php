@@ -48,4 +48,130 @@ class AbonoFacturaController extends Controller
         return response()->json($response,$response['code']);
 
     }
+
+    public function store(Request $request){
+        $json= $request->input('json',null);
+        $data = json_decode($json,true);
+        if(!empty($data)){
+            $data=array_map('trim',$data);
+            $rules=[
+                'factura'=>'required',
+                'fechaAbono' =>'required',
+                'saldoAnterior'=>'required',
+                'montoAbono'=>'required',
+                'saldoActual'=>'required'
+
+            ];
+            $validate=\validator($data,$rules);
+            if($validate->fails()){
+                $response = array(
+                    'status' => 'error',
+                    'code' => 406,
+                    'message' => 'Error al enviar los datos',
+                    'errors' => $validate->errors()
+                );
+            }else{
+                $abono = new AbonoFactura();
+                $abono->factura=$data['factura'];
+                $abono->fechaAbono=$data['fechaAbono'];
+                $abono->saldoAnterior=$data['saldoAnterior'];
+                $abono->montoAbono=$data['montoAbono'];
+                $abono->saldoActual=$data['saldoActual'];
+                $abono->save();
+                $response =array(
+                    'status' => 'success',
+                    'code' => '200',
+                    'message' => 'Datos alamacenados correctamente'
+                );
+            }
+        }else{
+            $response = array(
+                'status' => 'error',
+                'code' => 400,
+                'message' => 'Faltan Datos'
+            );
+
+        }
+       return response()->json($response,$response['code']);
+
+    }
+
+    public function update(Request $request){
+        $json = $request -> input('json',null);
+        $data= json_decode($json,true);
+        if(!empty($data)){
+            $data = array_map('trim',$data);
+            $rules=[
+                'factura'=>'required',
+                'fechaAbono' =>'required',
+                'saldoAnterior'=>'required',
+                'montoAbono'=>'required',
+                'saldoActual'=>'required'
+
+            ];
+            $validate=\validator($data,$rules);
+            if($validate->fails()){
+                $response = array(
+                    'status' => 'error',
+                    'code' => 406,
+                    'message' => 'Error al enviar los datos',
+                    'errors' => $validate->errors()
+                );
+            }else{
+                $id=$data['id'];
+                unset($data['id']);
+                $updated = AbonoFactura::where('id',$id)->update($data);
+                if($updated > 0){
+                    $response = array(
+                        'status' => 'success',
+                        'code' => 200,
+                        'message' => 'Datos actualizados correctamente'
+                    );
+                }else{
+                    $response = array( 
+                        'status' => 'error',
+                        'code' => 404,
+                        'message' => 'Error al actualizar los datos'
+                    );
+                }
+            }
+        
+        }else{
+            $response = array(
+                'status' => 'error',
+                'code' => 400,
+                'message' => 'Faltan Datos'
+            );
+        }
+        return response()->json($response,$response['code']);
+    }
+
+    public function destroy($id){
+        if(isset($id)){
+            $deleted = AbonoFactura::where('id',$id)->delete();
+            if($deleted){
+                $response = array(
+                    'status' => 'succes',
+                    'code' =>200,
+                    'message' => 'Elemento eliminado correctamente'
+
+                );
+            }else{
+                $response = array(
+                    'status' => 'error',
+                    'code' => 400,
+                    'message' => 'Error al eliminar el elemento'
+
+                );
+                
+            }
+        }else{
+            $response = array(
+                'status' => 'error',
+                'code' => 401,
+                'message' => 'Faltan elementos'
+            );
+        }
+        return response()->json($response,$response['code']);
+    }
 }
