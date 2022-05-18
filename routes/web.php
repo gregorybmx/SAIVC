@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FacturaVentaController;
+use App\Http\Controllers\DetalleFacturaVentaController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -18,5 +19,6 @@ Route::prefix('api')->group(function(){
 
 
     //Rutas Automaticas RESTful
-    Route::resource('/facturaventa', FacturaVentaController::class);
+    Route::resource('/facturaventa', FacturaVentaController::class,['except'=>['create','edit']]);
+    Route::resource('/detallefacturaventa', DetalleFacturaVentaController::class,['except'=>['create','edit']]);
 });
