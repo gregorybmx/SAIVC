@@ -29,7 +29,6 @@ class AgenteVendedorController extends Controller
     public function show($id){
         $data=AgenteVendedor::find($id);
         if(is_object($data)){
-            $data=$data->load('AgenteVendedor');
             $response=array(
                 'status'=>'success',
                 'code'=>200,
@@ -53,7 +52,7 @@ class AgenteVendedorController extends Controller
         if(!empty($data)){
             $data = array_map('trim',$data);
             $rules = [
-                'id' => 'required',
+                'id' => 'required|unique:agentes_vendedores',
                 'nombre' => 'required',
                 'apellidos' => 'required',
                 'telefono' => 'required' 
@@ -113,9 +112,7 @@ class AgenteVendedorController extends Controller
             }else{
                 $agentVen = $data['id'];//duda si va o nelson
                 unset($data['id']);
-                unset($data['nombre']);
-                unset($data['apellidos']);
-                unset($data['telefono']);
+              
                 $updated = AgenteVendedor::where('id',$agentVen)->update($data);
                 if($updated > 0){
                     $response = array(

@@ -29,7 +29,6 @@ class ProveedorController extends Controller
     public function show($id){
         $data=Proveedores::find($id);
         if(is_object($data)){
-            $data=$data->load('Proveedores');
             $response=array(
                 'status'=>'success',
                 'code'=>200,
@@ -53,7 +52,7 @@ class ProveedorController extends Controller
         if(!empty($data)){
             $data = array_map('trim',$data);
             $rules = [
-                'id' => 'required',
+                'id' => 'required|unique:proveedores',
                 'agente_ventas' => 'required',
                 'nombre' => 'required',
                 'numeroTelefonico' => 'required' 
@@ -93,52 +92,41 @@ class ProveedorController extends Controller
     public function update(Request $request){
         $json = $request->input('json',null);
         $data = json_decode($json,true);
-        if(!empty($data)){
-            $data =array_map('trim',$data);
-            $rules = [
-                'id' => 'required',
-                'agente_ventas' => 'required',
-                'nombre' => 'required',
-                'numeroTelefonico' => 'required'        
-            ];
-            $validate=\validator($data,$rules);
-            if($validate -> fails()){
-                $response = array(
-                    'status' => 'error',
-                    'code' => 406,
-                    'message' => 'Error al enviar los datos',
-                    'errors' =>$validate->errors()
-                );
-
-            }else{
-                $probe = $data['id'];//duda si va o nelson
-                unset($data['id']);
-                unset($data['agente_ventas']);
-                unset($data['nombre']);
-                unset($data['numeroTelefonico']);
-                $updated = Proveedores::where('id',$probe)->update($data);
-                if($updated > 0){
-                    $response = array(
-                        'status' => 'success',
-                        'code' => 200,
-                        'message' => 'Datos actualizados correctamente'
-                    );
-                }else{
-                    $response = array( 
-                        'status' => 'error',
-                        'code' => 404,
-                        'message' => 'Error al actualizar los datos'
-                    );
-                }
-
-            }
-        }else{
+        $data = array_map('trim', $data);
+        $rules = [
+            'id' => 'required',
+            'agente_ventas' => 'required',
+            'nombre' => 'required',
+            'numeroTelefonico' => 'required' 
+        ];
+        $validate = \validator($data, $rules);
+        if ($validate->fails()) {
             $response = array(
                 'status' => 'error',
-                'code' => 400,
-                'message' => 'Faltan Datos'
+                'code' => 406,
+                'message' => 'Error al enviar los datos',
+                'errors' => $validate->errors()
             );
+        } else {
+            $produc = $data['id']; //duda si va o nelson
+            unset($data['id']);
+
+            $updated = Proveedores::where('id', $produc)->update($data);
+            if ($updated > 0) {
+                $response = array(
+                    'status' => 'success',
+                    'code' => 200,
+                    'message' => 'Datos actualizados correctamente'
+                );
+            } else {
+                $response = array(
+                    'status' => 'error',
+                    'code' => 404,
+                    'message' => 'Error al actualizar los datos'
+                );
+            }
         }
+
         return response()->json($response,$response['code']);
     }
 
