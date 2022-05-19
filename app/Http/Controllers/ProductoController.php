@@ -8,7 +8,8 @@ class ProductoController extends Controller
 {
     public function _construct(){ }
 
-    public function index(){
+    public function index()
+    {
         $response=array(
             'status' => 'success',
             'code' => '404',
@@ -17,7 +18,8 @@ class ProductoController extends Controller
 
         $data=Producto::all();
 
-        if(sizeof($data)>0){
+        if(sizeof($data))
+        {
             $response['status']= 'success';
             $response['code']= 200;
             $response['data'] = $data;
@@ -26,8 +28,8 @@ class ProductoController extends Controller
 
     }
 
-    public function show($codigo){
-        $data=Producto::find($codigo);
+    public function show($id){
+        $data=Producto::find($id);
         if(is_object($data)){
             $data=$data->load('Producto');
             $response=array(
@@ -53,7 +55,7 @@ class ProductoController extends Controller
         if(!empty($data)){
             $data = array_map('trim',$data);
             $rules = [
-                'codigo' => 'required',
+                'id' => 'required',
                 'descripcion' => 'required',
                 'precio_compra' => 'required',
                 'porcentaje_ganancia' => 'required',         
@@ -66,13 +68,13 @@ class ProductoController extends Controller
                 $response = array(
                     'status' => 'error',
                     'code' =>406,
-                    'message' =>'Error al eviar los datos',
+                    'message' =>'Error al enviar los datos',
                     'errors' =>$validate->errors()
 
                 );
             }else{
                 $produc = new Producto();
-                $produc -> codigo = $data['codigo'];
+                $produc -> id = $data['id'];
                 $produc -> description = $data['descripcion'];
                 $produc -> precio_compra = $data['precio_compra'];
                 $produc -> porcentaje_ganancia = $data['porcentaje_ganancia'];
@@ -102,7 +104,7 @@ class ProductoController extends Controller
         if(!empty($data)){
             $data =array_map('trim',$data);
             $rules = [
-                'codigo' => 'required',
+                'id' => 'required',
                 'descripcion' => 'required',
                 'precio_compra' => 'required',
                 'porcentaje_ganancia' => 'required',         
@@ -115,14 +117,20 @@ class ProductoController extends Controller
                 $response = array(
                     'status' => 'error',
                     'code' => 406,
-                    'message' => 'Error al eviar los datos',
+                    'message' => 'Error al enviar los datos',
                     'errors' =>$validate->errors()
                 );
 
             }else{
-                $produc = $data['codigo'];
-                unset($data['codigo']);
-                $updated = Producto::where('codigo',$produc)->update($data);
+                $produc = $data['id'];//duda si va o nelson 
+                unset($data['id']);
+                unset($data['descripcion']);
+                unset($data['precio_compra']);
+                unset($data['porcentaje_ganancia']);
+                unset($data['precio_venta']);
+                unset($data['cantidadMinima']);
+                unset($data['stock']);
+                $updated = Producto::where('id',$produc)->update($data);
                 if($updated > 0){
                     $response = array(
                         'status' => 'success',
@@ -150,7 +158,7 @@ class ProductoController extends Controller
 
     public function destroy($id){
         if(isset($id)){
-            $deleted = Producto::where('codigo',$id)->delete();
+            $deleted = Producto::where('id',$id)->delete();
             if($deleted){
                 $response = array(
                     'status' => 'succes',
@@ -163,7 +171,7 @@ class ProductoController extends Controller
                 $response = array(
                     'status' => 'error',
                     'code' => 400,
-                    'message' => 'Error al eliminar el elemento'
+                    'message' => 'Error al eliminar los datos'
 
                 );
             }
@@ -171,7 +179,7 @@ class ProductoController extends Controller
             $response = array(
                 'status' => 'error',
                 'code' => 401,
-                'message' => 'Faltan elementos'
+                'message' => 'Faltan elementos datos'
             );
         }
         return response()->json($response,$response['code']);
