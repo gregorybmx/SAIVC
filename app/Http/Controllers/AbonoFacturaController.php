@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\AbonoFactura;
+
 
 class AbonoFacturaController extends Controller
 {
@@ -11,6 +13,7 @@ class AbonoFacturaController extends Controller
 
     }
 
+     // devuelve todos los elementos mediasnte GET
     public function index(){
         $response=array(
             'status' => 'success',
@@ -27,6 +30,8 @@ class AbonoFacturaController extends Controller
         return response()->json($response,$response['code']);
 
     }
+    // devuelve un elemento por su id mediante GET
+
 
     public function show($id){
         $data=AbonoFactura::find($id);
@@ -48,6 +53,8 @@ class AbonoFacturaController extends Controller
         return response()->json($response,$response['code']);
 
     }
+
+    // agrega un elemento mediante POST
 
     public function store(Request $request){
         $json= $request->input('json',null);
@@ -96,6 +103,7 @@ class AbonoFacturaController extends Controller
 
     }
 
+        //modifica un elemento mediante PUT
     public function update(Request $request){
         $json = $request -> input('json',null);
         $data= json_decode($json,true);
@@ -120,6 +128,8 @@ class AbonoFacturaController extends Controller
             }else{
                 $id=$data['id'];
                 unset($data['id']);
+                unset($data['created_at']);
+                unset($data['updated_at']);
                 $updated = AbonoFactura::where('id',$id)->update($data);
                 if($updated > 0){
                     $response = array(
@@ -145,6 +155,7 @@ class AbonoFacturaController extends Controller
         }
         return response()->json($response,$response['code']);
     }
+     //elimina un elemento mediante DELETE
 
     public function destroy($id){
         if(isset($id)){

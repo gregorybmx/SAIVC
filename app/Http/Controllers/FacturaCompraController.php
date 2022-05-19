@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\FacturaCompra;
 
 class FacturaCompraController extends Controller
 {
@@ -10,14 +11,14 @@ class FacturaCompraController extends Controller
     public function _construct(){
 
     }
-
+ // devuelve todos los elementos mediasnte GET
     public function index(){
         $response=array(
             'status' => 'success',
             'code' => '404',
             'data'=>'No se han agregado registros'
         );
-        $data=FacturaCompra::all();
+         $data=FacturaCompra::all();
 
         if(sizeof($data)>0){
             $response['status']= 'success';
@@ -27,11 +28,11 @@ class FacturaCompraController extends Controller
         return response()->json($response,$response['code']);
 
     }
-    
-    public function show($numero_factura){
-        $data=FacturaCompra::find($numero_factura);
+    // devuelve un elemento por su id mediante GET
+    public function show($id){
+        $data=FacturaCompra::find($id);
         if(is_object($data)){
-            $data=$data->load('FacturaCompra');
+            $data=$data->load('factura_compra');
             $response=array(
                 'status'=>'success',
                 'code'=>200,
@@ -48,14 +49,15 @@ class FacturaCompraController extends Controller
         return response()->json($response,$response['code']);
 
     }
-
-    public function strore(Request $request){
+ 
+    // agrega un elemento mediante POST
+    public function store(Request $request){
         $json = $request->input('json',null);
         $data = json_decode($json,true);
         if(!empty($data)){
             $data = array_map('trim',$data);
             $rules = [
-                'numero_factura' => 'required',
+                'id' => 'required',
                 'proveedor' => 'required',
                 'fecha_compra' => 'required',
                 'fecha_vencimiento' => 'required',         
@@ -72,7 +74,7 @@ class FacturaCompraController extends Controller
                 );
             }else{
                 $compra = new FacturaCompra();
-                $compra -> numero_factura = $data['numero_factura'];
+                $compra -> id = $data['id'];
                 $compra -> proveedor = $data['proveedor'];
                 $compra -> fecha_compra = $data['fecha_compra'];
                 $compra -> fecha_vencimiento = $data['fecha_vencimiento'];
@@ -94,6 +96,7 @@ class FacturaCompraController extends Controller
         return response()->json($response,$response['code']); 
     }
 
+    //modifica un elemento mediante PUT
     public function update(Request $request){
         $json = $request->input('json',null);
         $data = json_decode($json,true);
@@ -115,9 +118,11 @@ class FacturaCompraController extends Controller
                 );
 
             }else{
-                $numFactura = $data['numero_factura'];
-                unset($data['numero_factura']);
-                $updated = FacturaCompra::where('numero_factura',$numFactura)->update($data);
+                $id = $data['id'];
+                unset($data['id']);
+                unset($data['created_at']);
+                unset($data['updated_at']);
+                $updated = FacturaCompra::where('id',$id)->update($data);
                 if($updated > 0){
                     $response = array(
                         'status' => 'success',
@@ -143,9 +148,11 @@ class FacturaCompraController extends Controller
         return response()->json($response,$response['code']);
     }
 
+
+    //elimina un elemento mediante DELETE
     public function destroy($id){
         if(isset($id)){
-            $deleted = FacturaCompra::where('numero_factura',$id)->delete();
+            $deleted = FacturaCompra::where('id',$id)->delete();
             if($deleted){
                 $response = array(
                     'status' => 'succes',
