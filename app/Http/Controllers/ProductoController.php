@@ -31,7 +31,6 @@ class ProductoController extends Controller
     public function show($id){
         $data=Producto::find($id);
         if(is_object($data)){
-            $data=$data->load('Producto');
             $response=array(
                 'status'=>'success',
                 'code'=>200,
@@ -55,10 +54,10 @@ class ProductoController extends Controller
         if(!empty($data)){
             $data = array_map('trim',$data);
             $rules = [
-                'id' => 'required',
+                'id' => 'required|unique:productos',
                 'descripcion' => 'required',
                 'precio_compra' => 'required',
-                'porcentaje_ganancia' => 'required',         
+                'porcentaje_ganancia' => 'required',
                 'precio_venta'=>'required',
                 'cantidadMinima'=>'required',
                 'stock'=>'required'
@@ -75,7 +74,7 @@ class ProductoController extends Controller
             }else{
                 $produc = new Producto();
                 $produc -> id = $data['id'];
-                $produc -> description = $data['descripcion'];
+                $produc -> descripcion = $data['descripcion'];
                 $produc -> precio_compra = $data['precio_compra'];
                 $produc -> porcentaje_ganancia = $data['porcentaje_ganancia'];
                 $produc -> precio_venta = $data['precio_venta'];
@@ -95,64 +94,50 @@ class ProductoController extends Controller
                 'message' => 'Faltan datos'
             );
         }
-        return response()->json($response,$response['code']); 
+        return response()->json($response,$response['code']);
     }
 
     public function update(Request $request){
         $json = $request->input('json',null);
         $data = json_decode($json,true);
-        if(!empty($data)){
-            $data =array_map('trim',$data);
-            $rules = [
-                'id' => 'required',
-                'descripcion' => 'required',
-                'precio_compra' => 'required',
-                'porcentaje_ganancia' => 'required',         
-                'precio_venta'=>'required',
-                'cantidadMinima'=>'required',
-                'stock'=>'required'
-            ];
-            $validate=\validator($data,$rules);
-            if($validate -> fails()){
-                $response = array(
-                    'status' => 'error',
-                    'code' => 406,
-                    'message' => 'Error al enviar los datos',
-                    'errors' =>$validate->errors()
-                );
-
-            }else{
-                $produc = $data['id'];//duda si va o nelson 
-                unset($data['id']);
-                unset($data['descripcion']);
-                unset($data['precio_compra']);
-                unset($data['porcentaje_ganancia']);
-                unset($data['precio_venta']);
-                unset($data['cantidadMinima']);
-                unset($data['stock']);
-                $updated = Producto::where('id',$produc)->update($data);
-                if($updated > 0){
-                    $response = array(
-                        'status' => 'success',
-                        'code' => 200,
-                        'message' => 'Datos actualizados correctamente'
-                    );
-                }else{
-                    $response = array( 
-                        'status' => 'error',
-                        'code' => 404,
-                        'message' => 'Error al actualizar los datos'
-                    );
-                }
-
-            }
-        }else{
+        $data = array_map('trim', $data);
+        $rules = [
+            'id' => 'required',
+            'descripcion' => 'required',
+            'precio_compra' => 'required',
+            'porcentaje_ganancia' => 'required',
+            'precio_venta' => 'required',
+            'cantidadMinima' => 'required',
+            'stock' => 'required'
+        ];
+        $validate = \validator($data, $rules);
+        if ($validate->fails()) {
             $response = array(
                 'status' => 'error',
-                'code' => 400,
-                'message' => 'Faltan Datos'
+                'code' => 406,
+                'message' => 'Error al enviar los datos',
+                'errors' => $validate->errors()
             );
+        } else {
+            $produc = $data['id']; //duda si va o nelson
+            unset($data['id']);
+
+            $updated = Producto::where('id', $produc)->update($data);
+            if ($updated > 0) {
+                $response = array(
+                    'status' => 'success',
+                    'code' => 200,
+                    'message' => 'Datos actualizados correctamente'
+                );
+            } else {
+                $response = array(
+                    'status' => 'error',
+                    'code' => 404,
+                    'message' => 'Error al actualizar los datos'
+                );
+            }
         }
+
         return response()->json($response,$response['code']);
     }
 
@@ -166,7 +151,7 @@ class ProductoController extends Controller
                     'message' => 'Elemento eliminado correctamente'
 
                 );
-               
+
             }else{
                 $response = array(
                     'status' => 'error',
