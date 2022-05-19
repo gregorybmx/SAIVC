@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\AgenteVendedor;
 use Illuminate\Http\Request;
 
 class AgenteVendedorController extends Controller

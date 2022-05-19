@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Proveedores;
 use Illuminate\Http\Request;
 
 class ProveedorController extends Controller

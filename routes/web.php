@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\ProveedorController;
+use App\Http\Controllers\AgenteVendedorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +16,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::prefix('api')->group(function(){
+  
+    Route::resource('/producto', ProductoController::class);
+    Route::resource('/proveedor', ProveedorController::class);
+    Route::resource('/agentes_vendedores', AgenteVendedorController::class);
+
 });
