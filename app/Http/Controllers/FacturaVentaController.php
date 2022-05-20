@@ -58,45 +58,48 @@ class FacturaVentaController extends Controller
     //store ->agrega o guarda elemento mediante metodo Post
     public function store(Request $request) //Implementar comprobacion de existencia de archivo json
     {
+        $response = array(
+            'status' => 'error',
+            'code' => 406,
+            'message' => 'No se ha enviado el archivo con la informacion necesaria'
+        );
+
         $json = $request->input('json', null);
-        $data = json_decode($json, true);
-        $data = array_map('trim', $data);
 
-        $rules = [
-            'vendedor' => 'required',
-            'fecha_venta' => 'required',
-            'subtotal' => 'required',
-            'iva' => 'required',
-            'total' => 'required'
-        ];
-
-        $validate = \validator($data, $rules);
-
-        if ($validate->fails())
+        if($json)
         {
-            $response = array(
-                'status' => 'error',
-                'code' => 406,
-                'message' => 'Datos enviados no cumplen con las reglas establecidas ',
-                'errors' => $validate->errors()
-            );
-        }
+            $data = json_decode($json, true);
 
-        else
-        {
-            $facturaVenta = new FacturaVenta();
-            $facturaVenta->vendedor = $data['vendedor'];
-            $facturaVenta->fecha_venta = $data['fecha_venta'];
-            $facturaVenta->subtotal = $data['subtotal'];
-            $facturaVenta->iva = $data['iva'];
-            $facturaVenta->total = $data['total'];
-            $facturaVenta->save();
 
-            $response = array(
-                'status' => 'success',
-                'code' => 200,
-                'message' => 'Factura de Venta almacenada satisfactoriamente'
-            );
+            $rules = [
+                'vendedor' => 'required',
+                'fecha_venta' => 'required',
+                'subtotal' => 'required',
+                'iva' => 'required',
+                'total' => 'required'
+            ];
+
+            $validate = \validator($data, $rules);
+
+            if ($validate->fails()) {
+                $response['message'] = 'Datos enviados no cumplen con las reglas establecidas ';
+                $response['errors'] = $validate->errors();
+            }
+
+            else
+            {
+                $facturaVenta = new FacturaVenta();
+                $facturaVenta->vendedor = $data['vendedor'];
+                $facturaVenta->fecha_venta = $data['fecha_venta'];
+                $facturaVenta->subtotal = $data['subtotal'];
+                $facturaVenta->iva = $data['iva'];
+                $facturaVenta->total = $data['total'];
+                $facturaVenta->save();
+
+                $response['status'] = 'success';
+                $response['code'] = 201;
+                $response['message'] = 'Factura de Venta almacenada satisfactoriamente';
+            }
         }
 
         return response()->json($response, $response['code']);
@@ -105,53 +108,53 @@ class FacturaVentaController extends Controller
     //update modifica elemento mediante Metodo Put
     public function update(Request $request) //Implementar comprobacion de existencia de archivo json
     {
+        $response = array(
+            'status' => 'error',
+            'code' => 406,
+            'message' => 'No se ha enviado el archivo con la informacion necesaria'
+        );
+
         $json = $request->input('json', null);
-        $data = json_decode($json, true);
-        $data = array_map('trim', $data);
-        $rules = [
-            'id' => 'required',
-            'subtotal' => 'required',
-            'iva' => 'required',
-            'total' => 'required'
-        ];
 
-        $validate = \validator($data, $rules);
-
-        if ($validate->fails())
+        if($json)
         {
-            $response = array(
-                'status' => 'error',
-                'code' => 406,
-                'message' => 'Los datos enviados son incorrectos',
-                'errors' => $validate->errors()
-            );
-        }
+            $data = json_decode($json, true);
+            $data = array_map('trim', $data);
+            $rules = [
+                'id' => 'required',
+                'subtotal' => 'required',
+                'iva' => 'required',
+                'total' => 'required'
+            ];
 
-        else
-        {
-            $id = $data['id'];
-            unset($data['id']);
-            unset($data['vendedor']);
-            unset($data['fecha_venta']);
+            $validate = \validator($data, $rules);
 
-            $updated = FacturaVenta::where('id', $id)->update($data);
-
-            if ($updated > 0)
+            if ($validate->fails())
             {
-                $response = array(
-                    'status' => 'success',
-                    'code' => 200,
-                    'message' => 'Datos actualizados exitosamente'
-                );
+                $response['message'] = 'Los datos enviados son incorrectos';
+                $response['errors'] = $validate->errors();
             }
 
             else
             {
-                $response = array(
-                    'status' => 'error',
-                    'code' => 400,
-                    'message' => 'No se pudo actualizar los datos'
-                );
+                $id = $data['id'];
+                unset($data['id']);
+                unset($data['vendedor']);
+                unset($data['fecha_venta']);
+
+                $updated = FacturaVenta::where('id', $id)->update($data);
+
+                if ($updated > 0)
+                {
+                    $response['status'] = 'success';
+                    $response['code'] = 200;
+                    $response['message'] = 'Datos actualizados exitosamente';
+                }
+                else
+                {
+                    $response['code'] = 400;
+                    $response['message'] = 'No se pudo actualizar los datos';
+                }
             }
         }
 
@@ -160,36 +163,30 @@ class FacturaVentaController extends Controller
 
     public function destroy($id)
     {
+
+        $response=array(
+            'status'=>'error',
+            'code'=>404,
+            'message'=>'Falta el identificador de la Factura de Venta'
+        );
+
         if(isset($id))
         {
             $deleted = FacturaVenta::where('id', $id) -> delete();
 
             if($deleted)
             {
-                $response=array(
-                    'status'=>'success',
-                    'code'=>200,
-                    'message'=>'Factura de Venta eliminada correctamente'
-                );
+                $response['status'] = 'success';
+                $response['code'] = 200;
+                $response['message'] = 'Factura de Venta eliminada correctamente';
             }
 
             else{
-                $response=array(
-                    'status'=>'error',
-                    'code'=>400,
-                    'message'=>'No se pudo eliminar la factura de venta, puede que el registro no exista'
-                );
+                $response['code'] = 400;
+                $response['message'] = 'No se pudo eliminar la factura de venta, puede que el registro no exista';
             }
         }
 
-        else
-        {
-            $response=array(
-                'status'=>'error',
-                'code'=>404,
-                'message'=>'Falta el identificador de la Factura de Venta'
-            );
-        }
         return response()->json($response, $response['code']);
     }
 }
