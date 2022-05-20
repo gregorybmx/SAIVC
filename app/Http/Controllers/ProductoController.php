@@ -28,148 +28,170 @@ class ProductoController extends Controller
 
     }
 
-    public function show($id){
+    public function show($id)
+    {
+
+        $response=array(
+            'status'=>'error',
+            'code'=>404,
+            'message'=>'Registro no encontrado'
+
+        );
+
         $data=Producto::find($id);
-        if(is_object($data)){
-            $response=array(
-                'status'=>'success',
-                'code'=>200,
-                'data'=>$data
-            );
-        }else{
-            $response=array(
-                'status'=>'error',
-                'code'=>404,
-                'message'=>'Registro no encontrado'
 
-            );
+        if(is_object($data))
+        {
+            $response['status'] = 'success';
+            $response['code'] = 200;
+            $response['data'] = $data;
         }
-        return response()->json($response,$response['code']);
 
+        return response()->json($response,$response['code']);
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
+        $response = array(
+            'status' => 'error',
+            'code' => 406,
+            'message' => 'No se ha enviado el archivo con la informacion necesaria'
+        );
+
         $json = $request->input('json',null);
-        $data = json_decode($json,true);
-        if(!empty($data)){
-            $data = array_map('trim',$data);
+
+        if($json)
+        {
+            $data = json_decode($json, true);
+
+            if (!empty($data))
+            {
+                $data = array_map('trim', $data);
+
+                $rules = [
+                    'id' => 'required|unique:productos',
+                    'descripcion' => 'required',
+                    'precio_compra' => 'required',
+                    'porcentaje_ganancia' => 'required',
+                    'precio_venta' => 'required',
+                    'cantidadMinima' => 'required',
+                    'stock' => 'required'
+                ];
+
+                $validate = \validator($data, $rules);
+
+                if ($validate->fails())
+                {
+                    $response ['message'] = 'Error al enviar los datos';
+                    $response ['errors'] = $validate->errors();
+                }
+
+                else
+                {
+                    $produc = new Producto();
+                    $produc->id = $data['id'];
+                    $produc->descripcion = $data['descripcion'];
+                    $produc->precio_compra = $data['precio_compra'];
+                    $produc->porcentaje_ganancia = $data['porcentaje_ganancia'];
+                    $produc->precio_venta = $data['precio_venta'];
+                    $produc->cantidadMinima = $data['cantidadMinima'];
+                    $produc->stock = $data['stock'];
+                    $produc->save();
+                    $response ['status'] = 'success';
+                    $response ['code'] = 201;
+                    $response ['message'] = 'Datos almacenados correctamente';
+                }
+            } else {
+                $response ['code'] = 404;
+                $response ['message'] = 'Faltan datos';
+            }
+        }
+
+        return response()->json($response,$response['code']);
+    }
+
+    public function update(Request $request)
+    {
+        $response = array(
+            'status' => 'error',
+            'code' => 406,
+            'message' => 'No se ha enviado el archivo con la informacion necesaria'
+        );
+
+        $json = $request->input('json',null);
+
+        if($json)
+        {
+            $data = json_decode($json, true);
+            $data = array_map('trim', $data);
             $rules = [
-                'id' => 'required|unique:productos',
+                'id' => 'required',
                 'descripcion' => 'required',
                 'precio_compra' => 'required',
                 'porcentaje_ganancia' => 'required',
-                'precio_venta'=>'required',
-                'cantidadMinima'=>'required',
-                'stock'=>'required'
+                'precio_venta' => 'required',
+                'cantidadMinima' => 'required',
+                'stock' => 'required'
             ];
-            $validate=\validator($data,$rules);
-            if($validate->fails()){
-                $response = array(
-                    'status' => 'error',
-                    'code' =>406,
-                    'message' =>'Error al enviar los datos',
-                    'errors' =>$validate->errors()
 
-                );
-            }else{
-                $produc = new Producto();
-                $produc -> id = $data['id'];
-                $produc -> descripcion = $data['descripcion'];
-                $produc -> precio_compra = $data['precio_compra'];
-                $produc -> porcentaje_ganancia = $data['porcentaje_ganancia'];
-                $produc -> precio_venta = $data['precio_venta'];
-                $produc -> cantidadMinima = $data['cantidadMinima'];
-                $produc -> stock = $data['stock'];
-                $produc -> save();
-                $response = array(
-                    'status' => 'success',
-                    'code' => 200,
-                    'message' => 'Datos almacenados correctamente'
-                );
+            $validate = \validator($data, $rules);
+
+            if ($validate->fails()) {
+                $response ['message'] = 'Error al enviar los datos';
+                $response ['errors'] = $validate->errors();
             }
-        }else{
-            $response = array(
-                'status'=>'error',
-                'code' => 400,
-                'message' => 'Faltan datos'
-            );
-        }
-        return response()->json($response,$response['code']);
-    }
 
-    public function update(Request $request){
-        $json = $request->input('json',null);
-        $data = json_decode($json,true);
-        $data = array_map('trim', $data);
-        $rules = [
-            'id' => 'required',
-            'descripcion' => 'required',
-            'precio_compra' => 'required',
-            'porcentaje_ganancia' => 'required',
-            'precio_venta' => 'required',
-            'cantidadMinima' => 'required',
-            'stock' => 'required'
-        ];
-        $validate = \validator($data, $rules);
-        if ($validate->fails()) {
-            $response = array(
-                'status' => 'error',
-                'code' => 406,
-                'message' => 'Error al enviar los datos',
-                'errors' => $validate->errors()
-            );
-        } else {
-            $produc = $data['id']; //duda si va o nelson
-            unset($data['id']);
+            else
+            {
+                $produc = $data['id']; //duda si va o nelson
+                unset($data['id']);
 
-            $updated = Producto::where('id', $produc)->update($data);
-            if ($updated > 0) {
-                $response = array(
-                    'status' => 'success',
-                    'code' => 200,
-                    'message' => 'Datos actualizados correctamente'
-                );
-            } else {
-                $response = array(
-                    'status' => 'error',
-                    'code' => 404,
-                    'message' => 'Error al actualizar los datos'
-                );
+                $updated = Producto::where('id', $produc)->update($data);
+
+                if ($updated > 0)
+                {
+                    $response ['status'] = 'success';
+                    $response ['code'] = 200;
+                    $response ['message'] = 'Datos actualizados correctamente';
+                }
+
+                else
+                {
+                    $response ['code'] = 404;
+                    $response ['message'] = 'Error al actualizar los datos';
+                }
             }
         }
 
         return response()->json($response,$response['code']);
     }
 
-    public function destroy($id){
-        if(isset($id)){
+    public function destroy($id)
+    {
+        $response = array(
+            'status' => 'error',
+            'code' => 404,
+            'message' => 'Faltan elementos datos'
+        );
+
+        if(isset($id))
+        {
+
             $deleted = Producto::where('id',$id)->delete();
-            if($deleted){
-                $response = array(
-                    'status' => 'succes',
-                    'code' =>200,
-                    'message' => 'Elemento eliminado correctamente'
 
-                );
-
-            }else{
-                $response = array(
-                    'status' => 'error',
-                    'code' => 400,
-                    'message' => 'Error al eliminar los datos'
-
-                );
+            if($deleted)
+            {
+                $response ['status'] = 'succes';
+                $response ['code'] = 200;
+                $response ['message'] = 'Elemento eliminado correctamente';
             }
-        }else{
-            $response = array(
-                'status' => 'error',
-                'code' => 401,
-                'message' => 'Faltan elementos datos'
-            );
+
+            else{
+                $response ['code'] = 400;
+                $response ['message'] = 'Error al eliminar los datos';
+            }
         }
+
         return response()->json($response,$response['code']);
-
     }
-
-
 }
