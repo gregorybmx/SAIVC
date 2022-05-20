@@ -36,7 +36,7 @@ class AbonoFacturaController extends Controller
     public function show($id){
         $data=AbonoFactura::find($id);
         if(is_object($data)){
-            $data=$data->load('abono_factura');
+  
             $response=array(
                 'status'=>'success',
                 'code'=>200,

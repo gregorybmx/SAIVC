@@ -32,7 +32,7 @@ class FacturaCompraController extends Controller
     public function show($id){
         $data=FacturaCompra::find($id);
         if(is_object($data)){
-            $data=$data->load('factura_compra');
+
             $response=array(
                 'status'=>'success',
                 'code'=>200,
