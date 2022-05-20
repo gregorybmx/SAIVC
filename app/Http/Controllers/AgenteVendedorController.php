@@ -27,144 +27,166 @@ class AgenteVendedorController extends Controller
     }
 
     public function show($id){
+
+        $response=array(
+            'status'=>'error',
+            'code'=>404,
+            'message'=>'Registro no encontrado'
+        );
+
         $data=AgenteVendedor::find($id);
-        if(is_object($data)){
-            $response=array(
-                'status'=>'success',
-                'code'=>200,
-                'data'=>$data
-            );
-        }else{
-            $response=array(
-                'status'=>'error',
-                'code'=>404,
-                'message'=>'Registro no encontrado'
 
-            );
+        if(is_object($data))
+        {
+            $response['status'] = 'success';
+            $response['code'] = 200;
+            $response['data'] = $data;
         }
+
         return response()->json($response,$response['code']);
-
     }
 
-    public function store(Request $request){
-        $json = $request->input('json',null);
-        $data = json_decode($json,true);
-        if(!empty($data)){
-            $data = array_map('trim',$data);
-            $rules = [
-                'id' => 'required|unique:agentes_vendedores',
-                'nombre' => 'required',
-                'apellidos' => 'required',
-                'telefono' => 'required' 
-            ];
-            $validate=\validator($data,$rules);
-            if($validate->fails()){
-                $response = array(
-                    'status' => 'error',
-                    'code' =>406,
-                    'message' =>'Error al enviar los datos',
-                    'errors' =>$validate->errors()
+    public function store(Request $request)
+    {
+        $response = array(
+            'status' => 'error',
+            'code' => 406,
+            'message' => 'No se ha enviado el archivo con la informacion necesaria'
+        );
 
-                );
-            }else{
-                $agentVen = new AgenteVendedor();
-                $agentVen -> id = $data['id'];
-                $agentVen -> nombre = $data['nombre'];
-                $agentVen -> apellidos = $data['apellidos'];
-                $agentVen -> telefono = $data['telefono'];
-                $agentVen -> save();
-                $response = array(
-                    'status' => 'success',
-                    'code' => 200,
-                    'message' => 'Datos almacenados correctamente'
-                );
-            }
-        }else{
-            $response = array(
-                'status'=>'error',
-                'code' => 400,
-                'message' => 'Faltan datos'
-            );
-        }
-        return response()->json($response,$response['code']); 
-    }
-//tengo una duda con el agente ventas----- tambien es requerido? o no se actualiza
-    public function update(Request $request){
         $json = $request->input('json',null);
-        $data = json_decode($json,true);
-        if(!empty($data)){
-            $data =array_map('trim',$data);
-            $rules = [
-                'id' => 'required',
-                'nombre' => 'required',
-                'apellidos' => 'required',
-                'telefono' => 'required'        
-            ];
-            $validate=\validator($data,$rules);
-            if($validate -> fails()){
-                $response = array(
-                    'status' => 'error',
-                    'code' => 406,
-                    'message' => 'Error al enviar los datos',
-                    'errors' =>$validate->errors()
-                );
 
-            }else{
-                $agentVen = $data['id'];//duda si va o nelson
-                unset($data['id']);
-              
-                $updated = AgenteVendedor::where('id',$agentVen)->update($data);
-                if($updated > 0){
-                    $response = array(
-                        'status' => 'success',
-                        'code' => 200,
-                        'message' => 'Datos actualizados correctamente'
-                    );
-                }else{
-                    $response = array( 
-                        'status' => 'error',
-                        'code' => 404,
-                        'message' => 'Error al actualizar los datos'
-                    );
+        if($json)
+        {
+            $data = json_decode($json, true);
+
+            if (!empty($data))
+            {
+                $data = array_map('trim', $data);
+                $rules = [
+                    'id' => 'required|unique:agentes_vendedores',
+                    'nombre' => 'required',
+                    'apellidos' => 'required',
+                    'telefono' => 'required'
+                ];
+
+                $validate = \validator($data, $rules);
+
+                if ($validate->fails())
+                {
+                    $response ['message'] = 'Error al enviar los datos';
+                    $response ['errors'] = $validate->errors();
                 }
 
+                else
+                {
+                    $agentVen = new AgenteVendedor();
+                    $agentVen->id = $data['id'];
+                    $agentVen->nombre = $data['nombre'];
+                    $agentVen->apellidos = $data['apellidos'];
+                    $agentVen->telefono = $data['telefono'];
+                    $agentVen->save();
+
+                    $response ['status'] = 'success';
+                    $response ['code'] = 200;
+                    $response ['message'] = 'Datos almacenados correctamente';
+                }
             }
-        }else{
-            $response = array(
-                'status' => 'error',
-                'code' => 400,
-                'message' => 'Faltan Datos'
-            );
+
+            else
+            {
+                $response ['code'] = 400;
+                $response ['message'] = 'Faltan datos';
+            }
         }
+
         return response()->json($response,$response['code']);
     }
 
-    public function destroy($id){
+//tengo una duda con el agente ventas----- tambien es requerido? o no se actualiza
+    public function update(Request $request)
+    {
+        $response = array(
+            'status' => 'error',
+            'code' => 406,
+            'message' => 'No se ha enviado el archivo con la informacion necesaria'
+        );
+
+        $json = $request->input('json',null);
+
+        if($json)
+        {
+            $data = json_decode($json, true);
+
+            if (!empty($data)) {
+                $data = array_map('trim', $data);
+                $rules = [
+                    'id' => 'required',
+                    'nombre' => 'required',
+                    'apellidos' => 'required',
+                    'telefono' => 'required'
+                ];
+
+                $validate = \validator($data, $rules);
+
+                if ($validate->fails())
+                {
+                    $response ['message'] = 'Error al enviar los datos';
+                    $response ['errors'] = $validate->errors();
+                }
+
+                else
+                {
+                    $agentVen = $data['id']; //duda si va o nelson
+                    unset($data['id']);
+
+                    $updated = AgenteVendedor::where('id', $agentVen)->update($data);
+
+                    if ($updated > 0) {
+                        $response ['status'] = 'success';
+                        $response ['code'] = 200;
+                        $response ['message'] = 'Datos actualizados correctamente';
+                    }
+
+                    else
+                    {
+                        $response ['code'] = 404;
+                        $response ['message'] = 'Error al actualizar los datos';
+                    }
+                }
+            }
+
+            else
+            {
+                $response ['code'] = 400;
+                $response ['message'] = 'Faltan Datos';
+            }
+        }
+
+        return response()->json($response,$response['code']);
+    }
+
+    public function destroy($id)
+    {
+        $response = array(
+            'status' => 'error',
+            'code' => 401,
+            'message' => 'Faltan elementos'
+        );
+
         if(isset($id)){
             $deleted = AgenteVendedor::where('id',$id)->delete();
             if($deleted){
-                $response = array(
-                    'status' => 'succes',
-                    'code' =>200,
-                    'message' => 'Elemento eliminado correctamente'
+                $response ['status'] = 'succes';
+                $response ['code'] = 200;
+                $response ['message'] = 'Elemento eliminado correctamente';
 
-                );
-               
             }else{
-                $response = array(
-                    'status' => 'error',
-                    'code' => 400,
-                    'message' => 'Error al eliminar el elemento'
-
-                );
+                $response ['code'] = 400;
+                $response ['message'] = 'Error al eliminar el elemento';
             }
-        }else{
-            $response = array(
-                'status' => 'error',
-                'code' => 401,
-                'message' => 'Faltan elementos'
-            );
         }
+
         return response()->json($response,$response['code']);
 
     }
