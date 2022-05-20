@@ -88,14 +88,14 @@ class AgenteVendedorController extends Controller
                     $agentVen->save();
 
                     $response ['status'] = 'success';
-                    $response ['code'] = 200;
+                    $response ['code'] = 201;
                     $response ['message'] = 'Datos almacenados correctamente';
                 }
             }
 
             else
             {
-                $response ['code'] = 400;
+                $$response ['codigo'] = 404;
                 $response ['message'] = 'Faltan datos';
             }
         }
@@ -150,7 +150,7 @@ class AgenteVendedorController extends Controller
 
                     else
                     {
-                        $response ['code'] = 404;
+                        $response ['code'] = 400;
                         $response ['message'] = 'Error al actualizar los datos';
                     }
                 }
@@ -158,7 +158,7 @@ class AgenteVendedorController extends Controller
 
             else
             {
-                $response ['code'] = 400;
+                $response ['code'] = 404;
                 $response ['message'] = 'Faltan Datos';
             }
         }
@@ -170,18 +170,24 @@ class AgenteVendedorController extends Controller
     {
         $response = array(
             'status' => 'error',
-            'code' => 401,
+            'code' => 404,
             'message' => 'Faltan elementos'
         );
 
         if(isset($id)){
+
             $deleted = AgenteVendedor::where('id',$id)->delete();
-            if($deleted){
+
+            if($deleted)
+            {
                 $response ['status'] = 'succes';
                 $response ['code'] = 200;
                 $response ['message'] = 'Elemento eliminado correctamente';
 
-            }else{
+            }
+
+            else
+            {
                 $response ['code'] = 400;
                 $response ['message'] = 'Error al eliminar el elemento';
             }
