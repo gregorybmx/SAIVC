@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\AbonoFacturaController;
+use App\Http\Controllers\FacturaCompraController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +16,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::prefix('api')->group(function(){
+
+
+    //Rutas Automaticas RESTful
+    Route::resource('/abonofactura', AbonoFacturaController::class,['except'=>['create','edit']]);
+    Route::resource('/facturacompra', FacturaCompraController::class,['except'=>['create','edit']]);
 });
