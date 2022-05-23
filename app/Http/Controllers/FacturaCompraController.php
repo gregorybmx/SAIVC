@@ -125,59 +125,50 @@ class FacturaCompraController extends Controller
 
             var_dump($data);
 
-            if (!empty($data))
+            $data = array_map('trim', $data);
+
+            $rules = [
+                'id' => 'required',
+                'proveedor' => 'required',
+                'fecha_compra' => 'required',
+                'fecha_vencimiento' => 'required',
+                'monto_total' => 'required',
+            ];
+
+            $validate = \validator($data, $rules);
+
+            if ($validate->fails())
             {
-                $data = array_map('trim', $data);
-
-                $rules = [
-                    'proveedor' => 'required',
-                    'fecha_compra' => 'required',
-                    'fecha_vencimiento' => 'required',
-                    'monto_total' => 'required',
-                ];
-
-                $validate = \validator($data, $rules);
-
-                if ($validate->fails())
-                {
-                    $response ['message'] = 'Error al eviar los datos';
-                    $response ['errors'] = $validate -> errors();
-                }
-
-                else
-                {
-                    $id = $data['id'];
-                    unset($data['id']);
-                    unset($data['created_at']);
-                    unset($data['updated_at']);
-
-                    $updated = FacturaCompra::where('id', $id)->update($data);
-
-                    if ($updated > 0)
-                    {
-                        $response ['status'] = 'success';
-                        $response ['code'] = 200;
-                        $response ['message'] = 'Datos actualizados correctamente';
-                    }
-
-                    else
-                    {
-                        $response ['code'] = 404;
-                        $response ['message'] = 'Error al actualizar los datos';
-                    }
-                }
+                $response['message'] = 'Error al eviar los datos';
+                $response['errors'] = $validate->errors();
             }
 
             else
             {
-                $response ['code'] = 400;
-                $response ['message'] = 'Faltan Datos';
+                $id = $data['id'];
+                unset($data['id']);
+                unset($data['created_at']);
+                unset($data['updated_at']);
+
+                $updated = FacturaCompra::where('id', $id)->update($data);
+
+                if ($updated > 0)
+                {
+                    $response['status'] = 'success';
+                    $response['code'] = 200;
+                    $response['message'] = 'Datos actualizados correctamente';
+                }
+
+                else
+                {
+                    $response['code'] = 404;
+                    $response['message'] = 'Error al actualizar los datos';
+                }
             }
+
+            return response()->json($response,$response['code']);
         }
-
-        return response()->json($response,$response['code']);
     }
-
 
     //elimina un elemento mediante DELETE
     public function destroy($id)
