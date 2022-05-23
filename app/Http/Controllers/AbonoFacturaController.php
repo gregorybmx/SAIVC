@@ -132,6 +132,7 @@ class AbonoFacturaController extends Controller
                 $data = array_map('trim', $data);
 
                 $rules = [
+                    'id' => 'required',
                     'factura' => 'required',
                     'fechaAbono' => 'required',
                     'saldoAnterior' => 'required',
