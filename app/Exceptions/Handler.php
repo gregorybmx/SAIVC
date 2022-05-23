@@ -3,6 +3,9 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+USE Illuminate\Database\QueryException;
+USE Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -43,8 +46,17 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->reportable(function (Throwable $e) {
-            //
+
+        $this->renderable(function (QueryException $e)
+        {
+            if($e -> getMessage())
+            {
+                return  response()->json([
+                    'status'=>'error',
+                    'message' => 'Error en la base de datos',
+                    'data'=> $e -> getMessage()
+                ]);
+            }
         });
     }
 }
