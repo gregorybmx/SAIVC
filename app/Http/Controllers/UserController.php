@@ -37,8 +37,8 @@ class UserController extends Controller
         var_dump($data);
         $data = array_map('trim', $data);
         $rules = [
-            'id' => 'required|alpha',
-            'name' => 'required',
+            'id' => 'required',
+            'name' => 'required|alpha',
             'last_name' => 'required',
             'role' => 'required',
             'email' => 'required|email|unique:users',
