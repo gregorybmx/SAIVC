@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\User;
+use App\Helpers\JwtAuth;
 
 class UserController extends Controller
 {
     public function __construct(){
-
+        $this->middleware('api.auth',['except'=>['show','login','store','getImage']]);
     }
     public function __invoke(){
 
@@ -52,15 +53,13 @@ class UserController extends Controller
                 'errors' => $validate->errors(),
             );
         } else{
-            $pwd = password_hash($data->password, PASSWORD_BCRYPT,['cost'=> 4]);
             $user = new User();
             $user->id= $data['id'];
             $user->name= $data['name'];
             $user->last_name= $data['last_name'];
-            $user->name= $data['role'];
             $user->email= $data['email'];
-            $user->password= $pwd;
-            $user->role = 'ROLE_ADMIN';
+            $user->password= hash('sha256',$data['password']);;
+            $user->role = $data['role'];
             $user->save();
             $response = array(
                 'status' => 'success',
@@ -182,6 +181,38 @@ class UserController extends Controller
     }
 
     public function login(Request $request){
-       
+        $jwtAuth=new JwtAuth();
+        $json=$request->input('json',null);
+        $data=json_decode($json,true);
+        $data=array_map('trim',$data);
+        $rules=['email'=>'required|email','password'=>'required'];
+        $valid=\validator($data,$rules);
+        if($valid->fails()){
+            $response=array(
+                'status'=>'error',
+                'code'=>406,
+                'message'=>'Los datos enviados son incorrectos',
+                'errors'=>$valid->errors()
+            );
+            return response()->json($response,406);
+        }else{
+            $response=$jwtAuth->getToken($data['email'],$data['password']);
+            return response()->json($response);
+        }
+    }
+
+    public function getIdentity(Request $request){
+        $jwtAuth=new JwtAuth();
+        $token=$request->header('token');
+        if(isset($token)){
+            $response=$jwtAuth->checkToken($token,true);
+        }else{
+            $response=array(
+                'status'=>'error',
+                'code'=>406,
+                'message'=>'token no encontrado'
+            );
+        }
+        return response()->json($response);
     }
 }

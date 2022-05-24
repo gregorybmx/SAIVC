@@ -194,6 +194,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\JwtAuthServiceProvider::class,
 
     ],
 
@@ -207,7 +208,9 @@ return [
     | the aliases are "lazy" loaded so they don't hinder performance.
     |
     */
-
+    'aliases' => [
+    'JwtAuth' => App\Helpers\JWTAuth::class,
+    ],
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),

@@ -137,6 +137,7 @@ class ComposerStaticInit7607601df0be1cab8bd2b721a5599082
         'F' => 
         array (
             'Fruitcake\\Cors\\' => 15,
+            'Firebase\\JWT\\' => 13,
             'Faker\\' => 6,
             'Facade\\IgnitionContracts\\' => 25,
         ),
@@ -178,8 +179,8 @@ class ComposerStaticInit7607601df0be1cab8bd2b721a5599082
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
         'Whoops\\' => 
         array (
@@ -335,8 +336,8 @@ class ComposerStaticInit7607601df0be1cab8bd2b721a5599082
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -432,6 +433,10 @@ class ComposerStaticInit7607601df0be1cab8bd2b721a5599082
         array (
             0 => __DIR__ . '/..' . '/fruitcake/php-cors/src',
         ),
+        'Firebase\\JWT\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
+        ),
         'Faker\\' => 
         array (
             0 => __DIR__ . '/..' . '/fakerphp/faker/src/Faker',
@@ -507,7 +512,16 @@ class ComposerStaticInit7607601df0be1cab8bd2b721a5599082
     public static $classMap = array (
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
+        'App\\Http\\Controllers\\AbonoFacturaController' => __DIR__ . '/../..' . '/app/Http/Controllers/AbonoFacturaController.php',
+        'App\\Http\\Controllers\\AgenteVendedorController' => __DIR__ . '/../..' . '/app/Http/Controllers/AgenteVendedorController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
+        'App\\Http\\Controllers\\DetalleFacturaVentaController' => __DIR__ . '/../..' . '/app/Http/Controllers/DetalleFacturaVentaController.php',
+        'App\\Http\\Controllers\\FacturaCompraController' => __DIR__ . '/../..' . '/app/Http/Controllers/FacturaCompraController.php',
+        'App\\Http\\Controllers\\FacturaVentaController' => __DIR__ . '/../..' . '/app/Http/Controllers/FacturaVentaController.php',
+        'App\\Http\\Controllers\\ProductoController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProductoController.php',
+        'App\\Http\\Controllers\\ProveedorController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProveedorController.php',
+        'App\\Http\\Controllers\\ProveedoresDeProductoController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProveedoresDeProductoController.php',
+        'App\\Http\\Controllers\\UserController' => __DIR__ . '/../..' . '/app/Http/Controllers/UserController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
         'App\\Http\\Middleware\\EncryptCookies' => __DIR__ . '/../..' . '/app/Http/Middleware/EncryptCookies.php',
@@ -517,6 +531,14 @@ class ComposerStaticInit7607601df0be1cab8bd2b721a5599082
         'App\\Http\\Middleware\\TrustHosts' => __DIR__ . '/../..' . '/app/Http/Middleware/TrustHosts.php',
         'App\\Http\\Middleware\\TrustProxies' => __DIR__ . '/../..' . '/app/Http/Middleware/TrustProxies.php',
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
+        'App\\Models\\AbonoFactura' => __DIR__ . '/../..' . '/app/Models/AbonoFactura.php',
+        'App\\Models\\AgenteVendedor' => __DIR__ . '/../..' . '/app/Models/AgenteVendedor.php',
+        'App\\Models\\DetalleFacturasVenta' => __DIR__ . '/../..' . '/app/Models/DetalleFacturasVenta.php',
+        'App\\Models\\FacturaCompra' => __DIR__ . '/../..' . '/app/Models/FacturaCompra.php',
+        'App\\Models\\FacturaVenta' => __DIR__ . '/../..' . '/app/Models/FacturaVenta.php',
+        'App\\Models\\Producto' => __DIR__ . '/../..' . '/app/Models/Producto.php',
+        'App\\Models\\Proveedores' => __DIR__ . '/../..' . '/app/Models/Proveedores.php',
+        'App\\Models\\ProveedoresDeProducto' => __DIR__ . '/../..' . '/app/Models/ProveedoresDeProducto.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'App\\Providers\\AuthServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AuthServiceProvider.php',
@@ -1337,6 +1359,10 @@ class ComposerStaticInit7607601df0be1cab8bd2b721a5599082
         'Faker\\Provider\\zh_TW\\Text' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/Provider/zh_TW/Text.php',
         'Faker\\UniqueGenerator' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/UniqueGenerator.php',
         'Faker\\ValidGenerator' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/ValidGenerator.php',
+        'Firebase\\JWT\\BeforeValidException' => __DIR__ . '/..' . '/firebase/php-jwt/src/BeforeValidException.php',
+        'Firebase\\JWT\\ExpiredException' => __DIR__ . '/..' . '/firebase/php-jwt/src/ExpiredException.php',
+        'Firebase\\JWT\\JWT' => __DIR__ . '/..' . '/firebase/php-jwt/src/JWT.php',
+        'Firebase\\JWT\\SignatureInvalidException' => __DIR__ . '/..' . '/firebase/php-jwt/src/SignatureInvalidException.php',
         'Fruitcake\\Cors\\CorsService' => __DIR__ . '/..' . '/fruitcake/php-cors/src/CorsService.php',
         'Fruitcake\\Cors\\Exceptions\\InvalidOptionException' => __DIR__ . '/..' . '/fruitcake/php-cors/src/Exceptions/InvalidOptionException.php',
         'GrahamCampbell\\ResultType\\Error' => __DIR__ . '/..' . '/graham-campbell/result-type/src/Error.php',
@@ -4579,6 +4605,7 @@ class ComposerStaticInit7607601df0be1cab8bd2b721a5599082
         'Spatie\\FlareClient\\Enums\\MessageLevels' => __DIR__ . '/..' . '/spatie/flare-client-php/src/Enums/MessageLevels.php',
         'Spatie\\FlareClient\\Flare' => __DIR__ . '/..' . '/spatie/flare-client-php/src/Flare.php',
         'Spatie\\FlareClient\\FlareMiddleware\\AddDocumentationLinks' => __DIR__ . '/..' . '/spatie/flare-client-php/src/FlareMiddleware/AddDocumentationLinks.php',
+        'Spatie\\FlareClient\\FlareMiddleware\\AddEnvironmentInformation' => __DIR__ . '/..' . '/spatie/flare-client-php/src/FlareMiddleware/AddEnvironmentInformation.php',
         'Spatie\\FlareClient\\FlareMiddleware\\AddGitInformation' => __DIR__ . '/..' . '/spatie/flare-client-php/src/FlareMiddleware/AddGitInformation.php',
         'Spatie\\FlareClient\\FlareMiddleware\\AddGlows' => __DIR__ . '/..' . '/spatie/flare-client-php/src/FlareMiddleware/AddGlows.php',
         'Spatie\\FlareClient\\FlareMiddleware\\AddNotifierName' => __DIR__ . '/..' . '/spatie/flare-client-php/src/FlareMiddleware/AddNotifierName.php',
