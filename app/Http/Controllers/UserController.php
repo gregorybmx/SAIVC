@@ -52,7 +52,9 @@ class UserController extends Controller
                 'menssage' => 'El usuario no se ha creado',
                 'errors' => $validate->errors(),
             );
-        } else{
+        } 
+        
+        else{
             $user = new User();
             $user->id= $data['id'];
             $user->name= $data['name'];
@@ -204,9 +206,13 @@ class UserController extends Controller
     public function getIdentity(Request $request){
         $jwtAuth=new JwtAuth();
         $token=$request->header('token');
-        if(isset($token)){
+
+        if(isset($token))
+        {
             $response=$jwtAuth->checkToken($token,true);
-        }else{
+        }
+        
+        else{
             $response=array(
                 'status'=>'error',
                 'code'=>406,

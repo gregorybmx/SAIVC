@@ -14,5 +14,9 @@ use App\Http\Controllers\UserController;
 */
 
 Route::prefix('api')->group(function () {
+    Route::post('/user/login', [UserController::class, 'login']);   
+    Route::get('/user/getidentity', [UserController::class, 'getIdentity']);
+    
     Route::resource('/user', UserController::class);
+    
 });

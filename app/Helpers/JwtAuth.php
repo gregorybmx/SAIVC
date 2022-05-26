@@ -1,6 +1,8 @@
 <?php
 namespace App\Helpers;
 use Firebase\JWT\JWT;
+use \Firebase\JWT\Key;
+use \Firebase\JWT\ExpiredException;
 use App\Models\User;
 
 class JwtAuth{
@@ -9,7 +11,9 @@ class JwtAuth{
         $this->key = 'jujasjasjasjijijas';
     }
     public function getToken($email,$password){
-        $user=User::where(['email'=>$email,'password'=>hash('shar256',$password)])->first();
+        
+        $user=User::where(['email'=>$email,'password'=>hash('sha256',$password)])->first();
+        
         if(is_object($user)){
             $token=array(
                 'sub' => $user->id,
@@ -20,6 +24,7 @@ class JwtAuth{
                 'iat' => time(),
                 'exp' => time()+(120)
             );
+
             $data=JWT::encode($token,$this->key,'HS256');
         } else{
             $data=array(
@@ -30,26 +35,37 @@ class JwtAuth{
         }
         return $data;
     }
-    public function checkToken($jwt,$getIdentify=false){
+    public function checkToken($jwt,$getIdentity=false)
+    {
         $auth=false;
         if(isset($jwt)){
             try{
                 $decoded=JWT::decode($jwt,new Key($this->key,'HS256'));
-            }catch(\DomainException $ex){
+            }
+            
+            catch(\DomainException $ex)            
+            {
                 $auth=false;
-             }catch(\UnexpectedValueException $ex){
+            }
+            
+            catch(\UnexpectedValueException $ex)
+            {
                 $auth=false;
-            }catch(\ExpiredException $ex){
+            }
+            
+            catch(\ExpiredException $ex){
                 $auth=false;
             }
 
-            if(!empty($decoded)&&is_object($decoded)&&isset($decoded->sub)){
+            if(!empty($decoded)&&is_object($decoded)&&isset($decoded->sub))
+            {
                 $auth=true;
             }
-            if($getIdentity&&$auth){
+
+            if($getIdentity&&$auth)
+            {
                 return $decoded;
             }
-
         }
         return $auth;
     }
