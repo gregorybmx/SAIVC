@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 use App\Models\Proveedores;
 use Illuminate\Http\Request;
+use App\Helpers\JwtAuth;
 
 class ProveedorController extends Controller
 {
-    public function _construct(){ }
+    public function _construct()
+    { 
+        $this->middleware('api.auth',['except'=>['show','store']]);
+    }
 
     public function index(){
         $response=array(
