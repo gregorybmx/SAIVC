@@ -15,5 +15,4 @@ use App\Http\Controllers\UserController;
 
 Route::prefix('api')->group(function () {
     Route::resource('/user', UserController::class);
-
 });

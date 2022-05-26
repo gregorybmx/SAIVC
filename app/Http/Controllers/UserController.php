@@ -21,6 +21,7 @@ class UserController extends Controller
             'code' => '404',
             'data' => 'No se han agregado registros'
         );
+
         $data = User::all();
         if(sizeof($data)>0){
             $response['status'] = 'success';
@@ -29,12 +30,11 @@ class UserController extends Controller
         }
         return response()->json($response, $response['code']);
     }
-    
+
     public function store(Request $request){
 
         $json = $request->input('json', null);
         $data = json_decode($json, true);
-        var_dump($data);
         $data = array_map('trim', $data);
         $rules = [
             'id' => 'required',
@@ -142,7 +142,7 @@ class UserController extends Controller
 
     public function uploadImage(Request $request){
         $image=$request->file('file0');
-        $valid=\Validator::make($request->all(),[
+        $valid= \Validator::make($request->all(),[
             'file0'=>'required|image|mimes:jpg,png'
         ]);
         if(!$image||$valid->fails()){
