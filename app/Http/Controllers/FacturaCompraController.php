@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\FacturaCompra;
+use App\Helpers\JwtAuth;
 
 class FacturaCompraController extends Controller
 {
 
-    public function _construct(){
-
+    public function _construct()
+    {
+        $this->middleware('api.auth',['except'=>['show','store']]);
     }
  // devuelve todos los elementos mediasnte GET
     public function index(){
