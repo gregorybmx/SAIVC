@@ -13,6 +13,7 @@ class UserController extends Controller
     {
         $this->middleware('api.auth',['except'=>['show','login','store','getImage']]);
     }
+    
     public function __invoke(){
 
     }
