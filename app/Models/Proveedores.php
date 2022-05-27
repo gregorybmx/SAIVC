@@ -14,6 +14,4 @@ class Proveedores extends Model
     public function agentevendedor (){
         return $this->hasOne('App\Models\AgenteVendedor','agente_ventas');
     }
-
-
 }
