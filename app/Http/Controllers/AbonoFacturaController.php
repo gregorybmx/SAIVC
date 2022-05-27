@@ -1,4 +1,10 @@
 <?php
+/*
+Integrantes: Anthony Rugama,
+            Carlos Reyes,
+            Greivin Montoya,
+            Kendall Fallas 
+*/
 
 namespace App\Http\Controllers;
 
