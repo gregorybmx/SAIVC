@@ -105,7 +105,10 @@ class ProductoController extends Controller
                     $response ['code'] = 201;
                     $response ['message'] = 'Datos almacenados correctamente';
                 }
-            } else {
+            } 
+            
+            else 
+            {
                 $response ['code'] = 404;
                 $response ['message'] = 'Faltan datos';
             }
