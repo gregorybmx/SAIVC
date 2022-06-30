@@ -18,7 +18,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('api.auth',['except'=>['show','login','store','getImage']]);
+        $this->middleware('api.auth',['except'=>['show','login','store', 'getIdentity','getImage']]);
     }
     
     public function __invoke(){
