@@ -18,7 +18,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('api.auth',['except'=>['show','login','store', 'getIdentity','getImage']]);
+        $this->middleware('api.auth',['except'=>['index','show','login', 'update','store', 'detroy','getIdentity','getImage']]);
     }
     
     public function __invoke(){
@@ -89,6 +89,7 @@ class UserController extends Controller
                 'last_name' => 'required',
                 'role' => 'required',
                 'email' => 'required|email|unique:users',
+                'state' => 'required',
                 'password' => 'required',
             ];
             $validate = \validator($data,$rules);
@@ -107,6 +108,7 @@ class UserController extends Controller
                 $user->name= $data['name'];
                 $user->last_name= $data['last_name'];
                 $user->email= $data['email'];
+                $user->state= $data['email'];
                 $user->password= hash('sha256',$data['password']);;
                 $user->role = $data['role'];
                 $user->save();
@@ -142,6 +144,7 @@ class UserController extends Controller
                 'last_name' => 'required|alpha',
                 'role' => 'required',
                 'email' => 'required|email',
+                'state' => 'required',
                 'password' => 'required',
             ];
         
@@ -159,6 +162,7 @@ class UserController extends Controller
 
                 unset($data['id']);
                 unset($data['created_at']);
+                unset($data['updated_at']);
                 unset($data['remember_token']);
 
                 $data['password']= hash('sha256',$data['password']);
