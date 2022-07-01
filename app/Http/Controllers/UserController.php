@@ -88,6 +88,7 @@ class UserController extends Controller
                 'name' => 'required|alpha',
                 'last_name' => 'required',
                 'role' => 'required',
+                'state' => 'required',
                 'email' => 'required|email|unique:users',
                 'state' => 'required',
                 'password' => 'required',
@@ -108,7 +109,7 @@ class UserController extends Controller
                 $user->name= $data['name'];
                 $user->last_name= $data['last_name'];
                 $user->email= $data['email'];
-                $user->state= $data['email'];
+                $user->state= $data['state'];
                 $user->password= hash('sha256',$data['password']);;
                 $user->role = $data['role'];
                 $user->save();
