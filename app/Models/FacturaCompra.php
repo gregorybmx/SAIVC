@@ -9,7 +9,7 @@ class FacturaCompra extends Model
 {
     use HasFactory;
     protected $table='factura_compra';
-    protected $fillable=['id','proveedor','fecha_compra','fecha_vencimiento','monto_total'];
+    protected $fillable=['id','proveedor','fecha_Compra','fecha_Vencimiento','monto_Total'];
 
     public function proveedor(){
         return $this->belongsTo('App\Models\Proveedores','proveedor');

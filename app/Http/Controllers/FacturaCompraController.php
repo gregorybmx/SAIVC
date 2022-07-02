@@ -80,9 +80,9 @@ class FacturaCompraController extends Controller
                 $rules = [
                     'id' => 'required',
                     'proveedor' => 'required',
-                    'fecha_compra' => 'required',
-                    'fecha_vencimiento' => 'required',
-                    'monto_total' => 'required',
+                    'fecha_Compra' => 'required',
+                    'fecha_Vencimiento' => 'required',
+                    'monto_Total' => 'required',
                 ];
 
                 $validate = \validator($data, $rules);
@@ -97,9 +97,9 @@ class FacturaCompraController extends Controller
                     $compra = new FacturaCompra();
                     $compra->id = $data['id'];
                     $compra->proveedor = $data['proveedor'];
-                    $compra->fecha_compra = $data['fecha_compra'];
-                    $compra->fecha_vencimiento = $data['fecha_vencimiento'];
-                    $compra->monto_total = $data['monto_total'];
+                    $compra->fecha_Compra = $data['fecha_Compra'];
+                    $compra->fecha_Vencimiento = $data['fecha_Vencimiento'];
+                    $compra->monto_Total = $data['monto_Total'];
                     $compra->save();
                     $response ['status'] = 'success';
                     $response ['code'] = 200;
@@ -139,9 +139,9 @@ class FacturaCompraController extends Controller
             $rules = [
                 'id' => 'required',
                 'proveedor' => 'required',
-                'fecha_compra' => 'required',
-                'fecha_vencimiento' => 'required',
-                'monto_total' => 'required',
+                'fecha_Compra' => 'required',
+                'fecha_Vencimiento' => 'required',
+                'monto_Total' => 'required',
             ];
 
             $validate = \validator($data, $rules);
