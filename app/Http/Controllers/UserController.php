@@ -92,6 +92,7 @@ class UserController extends Controller
                 'email' => 'required|email|unique:users',
                 'state' => 'required',
                 'password' => 'required',
+                'image' => 'required',
             ];
             $validate = \validator($data,$rules);
             
@@ -112,6 +113,7 @@ class UserController extends Controller
                 $user->state= $data['state'];
                 $user->password= hash('sha256',$data['password']);;
                 $user->role = $data['role'];
+                $user->image = $data['image'];
                 $user->save();
                 
                 $response['status'] = 'success';

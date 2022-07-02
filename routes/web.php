@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('api')->group(function()
 {
     Route::post('/user/upload',[UserController::class,'uploadImage']);
-    Route::get('user/getimage/{filename}',[UserController::class, 'getImage']);
+    Route::get('/user/getimage/{filename}',[UserController::class, 'getImage']);
     Route::post('/user/login',[UserController::class, 'login']);
     Route::get('/user/getidentity',[UserController::class, 'getIdentity']);
     
