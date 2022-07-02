@@ -76,9 +76,11 @@ class ProveedorController extends Controller
                 $data = array_map('trim',$data);
                 $rules = [
                     'id' => 'required|unique:proveedores',
-                    'agente_ventas' => 'required',
-                    'nombre' => 'required',
-                    'numeroTelefonico' => 'required'
+                    'nombre_Proveedor' => 'required',
+                    'nombre_Agente' => 'required',
+                    'apellidos_Agente' => 'required',
+                    'telefono_Proveedor' => 'required',
+                    'telefono_Agente' => 'required'
                 ];
 
                 $validate=\validator($data,$rules);
@@ -93,13 +95,15 @@ class ProveedorController extends Controller
                 {
                     $probe = new Proveedores();
                     $probe -> id = $data['id'];
-                    $probe -> agente_ventas = $data['agente_ventas'];
-                    $probe -> nombre = $data['nombre'];
-                    $probe -> numeroTelefonico = $data['numeroTelefonico'];
+                    $probe -> nombre_Proveedor = $data['nombre_Proveedor'];
+                    $probe -> nombre_Agente = $data['nombre_Agente'];
+                    $probe -> apellidos_Agente = $data['apellidos_Agente'];
+                    $probe -> telefono_Proveedor = $data['telefono_Proveedor'];
+                    $probe -> telefono_Agente = $data['telefono_Agente'];
                     $probe -> save();
 
                     $response ['status'] = 'success';
-                    $response ['code'] = 201;
+                    $response ['code'] = 200;
                     $response ['message'] = 'Datos almacenados correctamente';
                 }
             }
@@ -131,9 +135,11 @@ class ProveedorController extends Controller
             $data = array_map('trim', $data);
             $rules = [
                 'id' => 'required',
-                'agente_ventas' => 'required',
-                'nombre' => 'required',
-                'numeroTelefonico' => 'required'
+                'nombre_Proveedor' => 'required',
+                'nombre_Agente' => 'required',
+                'apellidos_Agente' => 'required',
+                'telefono_Proveedor' => 'required',
+                'telefono_Agente' => 'required'
             ];
             $validate = \validator($data, $rules);
             if ($validate->fails())
@@ -144,7 +150,7 @@ class ProveedorController extends Controller
 
             else
             {
-                $produc = $data['id']; //duda si va o nelson
+                $produc = $data['id']; 
                 unset($data['id']);
 
                 $updated = Proveedores::where('id', $produc)->update($data);
