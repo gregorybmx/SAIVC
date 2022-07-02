@@ -252,15 +252,10 @@ class UserController extends Controller
     public function getImage($filename)
     {    
         $exist=\Storage::disk('users')->exists($filename);
-        
-        if($exist)
-        {
+        if($exist){
             $file=\Storage::disk('users')->get($filename);
             return new Response($file,200);
-        }
-        
-        else
-        {
+        }else{
             $response=array(
                 'status'=>'error',
                 'code'=>404,
