@@ -9,7 +9,7 @@ class AbonoFactura extends Model
 {
     use HasFactory;
     protected $table='abono_factura';
-    protected $fillable=['factura','fechaAbono','saldoAnterior','montoAbono','saldoActual'];
+    protected $fillable=['factura','fechaA_bono','saldo_Anterior','monto_Abono','saldo_Actual'];
     
     public function factura(){
         return $this->belogsTo('\App\Models\FacturaCompra','factura');

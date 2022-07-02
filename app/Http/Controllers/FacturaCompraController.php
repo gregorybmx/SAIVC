@@ -97,9 +97,9 @@ class FacturaCompraController extends Controller
                     $compra = new FacturaCompra();
                     $compra->id = $data['id'];
                     $compra->proveedor = $data['proveedor'];
-                    $compra->fecha_compra = $data['fecha_Compra'];
-                    $compra->fecha_vencimiento = $data['fecha_Vencimiento'];
-                    $compra->monto_total = $data['monto_Total'];
+                    $compra->fecha_Compra = $data['fecha_Compra'];
+                    $compra->fecha_Vencimiento = $data['fecha_Vencimiento'];
+                    $compra->monto_Total = $data['monto_Total'];
                     $compra->save();
                     $response ['status'] = 'success';
                     $response ['code'] = 200;

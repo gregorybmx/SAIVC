@@ -81,10 +81,10 @@ class AbonoFacturaController extends Controller
                 $data = array_map('trim', $data);
                 $rules = [
                     'factura' => 'required',
-                    'fechaAbono' => 'required',
-                    'saldoAnterior' => 'required',
-                    'montoAbono' => 'required',
-                    'saldoActual' => 'required'
+                    'fecha_Abono' => 'required',
+                    'saldo_Anterior' => 'required',
+                    'monto_Abono' => 'required',
+                    'saldo_Actual' => 'required'
                 ];
 
                 $validate = \validator($data, $rules);
@@ -99,10 +99,10 @@ class AbonoFacturaController extends Controller
                 {
                     $abono = new AbonoFactura();
                     $abono->factura = $data['factura'];
-                    $abono->fechaAbono = $data['fechaAbono'];
-                    $abono->saldoAnterior = $data['saldoAnterior'];
-                    $abono->montoAbono = $data['montoAbono'];
-                    $abono->saldoActual = $data['saldoActual'];
+                    $abono->fecha_Abono = $data['fecha_Abono'];
+                    $abono->saldo_Anterior = $data['saldo_Anterior'];
+                    $abono->monto_Abono = $data['monto_Abono'];
+                    $abono->saldo_Actual = $data['saldo_Actual'];
                     $abono->save();
 
                     $response ['status'] = 'success';
@@ -141,10 +141,10 @@ class AbonoFacturaController extends Controller
                 $rules = [
                     'id' => 'required',
                     'factura' => 'required',
-                    'fechaAbono' => 'required',
-                    'saldoAnterior' => 'required',
-                    'montoAbono' => 'required',
-                    'saldoActual' => 'required'
+                    'fecha_Abono' => 'required',
+                    'saldo_Anterior' => 'required',
+                    'monto_Abono' => 'required',
+                    'saldo_Actual' => 'required'
 
                 ];
 
