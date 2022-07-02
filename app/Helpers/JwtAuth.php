@@ -22,6 +22,7 @@ class JwtAuth{
                 'last_name' => $user->last_name,
                 'image'=>$user->image,
                 'role' => $user->role,
+                'image' => $user->image,
                 'iat' => time(),
                 'exp' => time()+(120)
             );
