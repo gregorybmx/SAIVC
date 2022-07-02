@@ -9,7 +9,12 @@ class DetalleFacturasVenta extends Model
 {
     use HasFactory;
     protected $table = 'detalle_factura_ventas';
-    protected $fillable = ['factura', 'producto', 'cantidad', 'precio_unitario', 'precio_total'];
+    protected $fillable = [
+        'factura', 
+        'producto', 
+        'cantidad', 
+        'precio_Unitario', 
+        'precio_Total'];
 
     public  function facturaVenta()
     {

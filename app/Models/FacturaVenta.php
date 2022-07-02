@@ -9,7 +9,12 @@ class FacturaVenta extends Model
 {
     use HasFactory;
     protected $table = 'factura_venta';
-    protected $fillable = ['vendedor', 'fecha_venta','subtotal','iva', 'total'];
+    protected $fillable = 
+    ['vendedor', 
+    'fecha_Venta',
+    'subtotal',
+    'iva', 
+    'total'];
 
     public function facturaVenta()
     {

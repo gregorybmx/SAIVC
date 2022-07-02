@@ -90,6 +90,7 @@ class UserController extends Controller
                 'role' => 'required',
                 'state' => 'required',
                 'email' => 'required|email|unique:users',
+                'state' => 'required',
                 'password' => 'required',
             ];
             $validate = \validator($data,$rules);
