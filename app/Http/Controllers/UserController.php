@@ -18,7 +18,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('api.auth',['except'=>['index','show','login','store','destroy','update','getImage']]);
+        $this->middleware('api.auth',['except'=>['index','show','login','store','destroy','update','getImage','uploadImage']]);
     }
     
     public function __invoke(){
@@ -217,49 +217,37 @@ class UserController extends Controller
 
     public function uploadImage(Request $request)
     {
-        $response=array(
-            'status'=>'success',
-            'code'=>200,
-            'message'=>'Imagen guardada correctamente',
-            'image_name'=>$filename
-        );
-
         $image=$request->file('file0');
-
-        $valid= \Validator::make($request->all(),[
+        $valid=\Validator::make($request->all(),[
             'file0'=>'required|image|mimes:jpg,png'
         ]);
-
-        if(!$image||$valid->fails())
-        {
-            $response['status'] = 'error';
-            $response['code'] = 406;
-            $response['message'] = 'Error al subir el archivo';
-            $response['errors'] = $valid->errors();
-        }
-        
-        else
-        {
+        if(!$image||$valid->fails()){
+            $response=array(
+                'status'=>'error',
+                'code'=>406,
+                'message'=>'Error al subir el archivo',
+                'errors'=>$valid->errors()
+            );
+        }else{
             $filename=time().$image->getClientOriginalName();
-
             \Storage::disk('users')->put($filename,\File::get($image));
+            $response=array(
+                'status'=>'success',
+                'code'=>200,
+                'message'=>'Imagen guardada correctamente',
+                'image_name'=>$filename
+            );
         }
-
         return response()->json($response,$response['code']);
     }
 
     public function getImage($filename)
     {    
         $exist=\Storage::disk('users')->exists($filename);
-        
-        if($exist)
-        {
+        if($exist){
             $file=\Storage::disk('users')->get($filename);
             return new Response($file,200);
-        }
-        
-        else
-        {
+        }else{
             $response=array(
                 'status'=>'error',
                 'code'=>404,
