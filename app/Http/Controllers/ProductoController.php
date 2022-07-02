@@ -23,20 +23,20 @@ class ProductoController extends Controller
     {
         $response=array(
             'status' => 'success',
-            'code' => '404',
+            'code' => '204',
             'data'=>'No se han agregado registros'
         );
 
         $data=Producto::all();
 
-        if(sizeof($data))
+        if(sizeof($data)>0)
         {
             $response['status']= 'success';
             $response['code']= 200;
             $response['data'] = $data;
         }
-        return response()->json($response,$response['code']);
 
+        return response()->json($response,$response['code']);
     }
 
     public function show($id)
@@ -45,13 +45,12 @@ class ProductoController extends Controller
         $response=array(
             'status'=>'error',
             'code'=>404,
-            'message'=>'Registro no encontrado'
+            'data'=>'Registro no encontrado'
 
         );
 
         $data=Producto::find($id);
-
-        if(is_object($data))
+        if(is_object($data)>0)
         {
             $response['status'] = 'success';
             $response['code'] = 200;
@@ -82,10 +81,9 @@ class ProductoController extends Controller
                 $rules = [
                     'id' => 'required|unique:productos',
                     'descripcion' => 'required',
-                    'precio_compra' => 'required',
-                    'porcentaje_ganancia' => 'required',
-                    'precio_venta' => 'required',
-                    'cantidadMinima' => 'required',
+                    'porcentaje_Ganancia' => 'required',
+                    'precio_Venta' => 'required',
+                    'cantidad_Minima' => 'required',
                     'stock' => 'required'
                 ];
 
@@ -102,14 +100,13 @@ class ProductoController extends Controller
                     $produc = new Producto();
                     $produc->id = $data['id'];
                     $produc->descripcion = $data['descripcion'];
-                    $produc->precio_compra = $data['precio_compra'];
-                    $produc->porcentaje_ganancia = $data['porcentaje_ganancia'];
-                    $produc->precio_venta = $data['precio_venta'];
-                    $produc->cantidadMinima = $data['cantidadMinima'];
+                    $produc->porcentaje_Ganancia = $data['porcentaje_Ganancia'];
+                    $produc->precio_Venta = $data['precio_Venta'];
+                    $produc->cantidad_Minima = $data['cantidad_Minima'];
                     $produc->stock = $data['stock'];
                     $produc->save();
                     $response ['status'] = 'success';
-                    $response ['code'] = 201;
+                    $response ['code'] = 200;
                     $response ['message'] = 'Datos almacenados correctamente';
                 }
             } 
@@ -141,10 +138,9 @@ class ProductoController extends Controller
             $rules = [
                 'id' => 'required',
                 'descripcion' => 'required',
-                'precio_compra' => 'required',
-                'porcentaje_ganancia' => 'required',
-                'precio_venta' => 'required',
-                'cantidadMinima' => 'required',
+                'porcentaje_Ganancia' => 'required',
+                'precio_Venta' => 'required',
+                'cantidad_Minima' => 'required',
                 'stock' => 'required'
             ];
 
@@ -158,7 +154,10 @@ class ProductoController extends Controller
             else
             {
                 $produc = $data['id']; //duda si va o nelson
+                
                 unset($data['id']);
+                unset($data['created_at']);
+                unset($data['updated_at']);
 
                 $updated = Producto::where('id', $produc)->update($data);
 
@@ -171,7 +170,7 @@ class ProductoController extends Controller
 
                 else
                 {
-                    $response ['code'] = 404;
+                    $response ['code'] = 304;
                     $response ['message'] = 'Error al actualizar los datos';
                 }
             }
@@ -183,8 +182,8 @@ class ProductoController extends Controller
     public function destroy($id)
     {
         $response = array(
-            'status' => 'error',
-            'code' => 404,
+            'status' => 'No Content',
+            'code' => 204,
             'message' => 'Faltan elementos datos'
         );
 
@@ -195,7 +194,7 @@ class ProductoController extends Controller
 
             if($deleted)
             {
-                $response ['status'] = 'succes';
+                $response ['status'] = 'success';
                 $response ['code'] = 200;
                 $response ['message'] = 'Elemento eliminado correctamente';
             }

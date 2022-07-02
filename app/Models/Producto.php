@@ -13,10 +13,9 @@ class Producto extends Model
     protected $fillable=[
         'id',
         'descripcion',
-        'precio_compra',
-        'porcentaje_ganancia',
-        'precio_venta',
-        'cantidadMinima',
+        'porcentaje_Ganancia',
+        'precio_Venta',
+        'cantidad_Minima',
         'stock'
 ];
 

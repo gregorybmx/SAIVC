@@ -18,7 +18,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('api.auth',['except'=>['index','show','login', 'update','store', 'detroy','getIdentity','getImage']]);
+        $this->middleware('api.auth',['except'=>['index','show','login', 'update','store', 'detroy','getIdentity','getImage', 'uploadImage']]);
     }
     
     public function __invoke(){
@@ -218,35 +218,35 @@ class UserController extends Controller
 
     public function uploadImage(Request $request)
     {
-        $response=array(
-            'status'=>'success',
-            'code'=>200,
-            'message'=>'Imagen guardada correctamente',
-            'image_name'=>$filename
-        );
-
-        $image=$request->file('file0');
-
-        $valid= \Validator::make($request->all(),[
-            'file0'=>'required|image|mimes:jpg,png'
+        $image  = $request -> file('file0');
+        $valid = \Validator::make($request -> all(), [
+            'file0' => 'required|image|mimes:jpg,png'
         ]);
 
-        if(!$image||$valid->fails())
+        if(!$image || $valid -> fails())
         {
-            $response['status'] = 'error';
-            $response['code'] = 406;
-            $response['message'] = 'Error al subir el archivo';
-            $response['errors'] = $valid->errors();
+            $response=array(
+                'status'=>'error',
+                'code'=>406,
+                'message'=>'Error al guardar imagen',
+                'error' => $valid -> errors()
+            );
         }
-        
+
         else
-        {
-            $filename=time().$image->getClientOriginalName();
-
-            \Storage::disk('users')->put($filename,\File::get($image));
+        { 
+            $filename = time().$image->getClientOriginalName();
+            \Storage::disk('users') -> put($filename, \File::get($image));
+            
+            $response=array(
+                'status'=>'success',
+                'code'=>200,
+                'message'=>'Imagen guardada correctamente',
+                'image_name' => $filename
+            );
         }
 
-        return response()->json($response,$response['code']);
+        return response() -> json($response, $response['code']);
     }
 
     public function getImage($filename)
