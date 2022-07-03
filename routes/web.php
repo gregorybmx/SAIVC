@@ -7,7 +7,6 @@ use App\Http\Controllers\DetalleFacturaVentaController;
 use App\Http\Controllers\FacturaCompraController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ProveedorController;
-use App\Http\Controllers\ProveedoresProductosController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +34,5 @@ Route::prefix('api')->group(function()
     Route::resource('/facturacompra', FacturaCompraController::class,['except'=>['create','edit']]);
     Route::resource('/producto', ProductoController::class,['except'=>['create','edit']]);
     Route::resource('/proveedor', ProveedorController::class,['except'=>['create','edit']]);
-    Route::resource('/proveedorproductos', ProveedoresProductosController::class,['except'=>['create','edit','update', 'show', 'index']]);
     Route::resource('/user', UserController::class,['except'=>['create','edit','login', 'getIdentity']]);
 });
