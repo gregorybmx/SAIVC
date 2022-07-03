@@ -52,6 +52,8 @@ class AbonoFacturaController extends Controller
 
         if(is_object($data)){
 
+            $data = $data->load('facturaCompra');
+
             $response ['status'] = 'success';
             $response ['code'] = 200;
             $response ['data'] = $data;
@@ -80,7 +82,7 @@ class AbonoFacturaController extends Controller
             {
                 $data = array_map('trim', $data);
                 $rules = [
-                    'factura' => 'required',
+                    'factura_compra_id' => 'required',
                     'fecha_Abono' => 'required',
                     'saldo_Anterior' => 'required',
                     'monto_Abono' => 'required',
@@ -98,7 +100,7 @@ class AbonoFacturaController extends Controller
                 else
                 {
                     $abono = new AbonoFactura();
-                    $abono->factura = $data['factura'];
+                    $abono->factura_compra_id = $data['factura_compra_id'];
                     $abono->fecha_Abono = $data['fecha_Abono'];
                     $abono->saldo_Anterior = $data['saldo_Anterior'];
                     $abono->monto_Abono = $data['monto_Abono'];
@@ -140,7 +142,7 @@ class AbonoFacturaController extends Controller
 
                 $rules = [
                     'id' => 'required',
-                    'factura' => 'required',
+                    'factura_compra_id' => 'factura_compra_id',
                     'fecha_Abono' => 'required',
                     'saldo_Anterior' => 'required',
                     'monto_Abono' => 'required',

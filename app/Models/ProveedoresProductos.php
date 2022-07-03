@@ -8,16 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class ProveedoresProductos extends Model
 {
     use HasFactory;
-    protected $table='proveedores_productos';
-    protected $fillable=['proveedor','producto'];
+    protected $table='proveedores_de_productos';
+    protected $fillable=['proveedor_id','producto_id'];
 
     public function proveedorProducto ()
     {
-        return $this->hasOne('App\Models\Proveedores','proveedor');
+        return $this->hasOne('App\Models\Proveedores','proveedor_id');
     }
 
     public function productoProveedor ()
     {
-        return $this->hasOne('App\Models\Productos','producto');
+        return $this->hasOne('App\Models\Productos','producto_id');
     }
 }

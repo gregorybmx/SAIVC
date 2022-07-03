@@ -17,7 +17,7 @@ class DetalleFacturaVentaController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('api.auth',['except'=>['show','store']]);
+        $this->middleware('api.auth',['except'=>['show','store', 'index']]);
     }
 
     //Index -> Devuelve todos los elementos mediante el metodo Get
@@ -54,6 +54,7 @@ class DetalleFacturaVentaController extends Controller
 
         if(is_object($detalleFactura))
         {
+            $detalleFactura = $detalleFactura -> load('facturaVenta', 'producto');
             $response['status'] = 'success';
             $response['code'] = 200;
             $response['data'] = $detalleFactura;
@@ -78,11 +79,11 @@ class DetalleFacturaVentaController extends Controller
             $data = array_map('trim', $data);
 
             $rules = [
-                'factura' => 'required',
-                'producto' => 'required',
+                'factura_venta_id' => 'required',
+                'producto_id' => 'required',
                 'cantidad' => 'required',
-                'precio_unitario' => 'required',
-                'precio_total' => 'required'
+                'precio_Unitario' => 'required',
+                'subtotal' => 'required'
             ];
 
             $validate = \validator($data, $rules);
@@ -96,16 +97,16 @@ class DetalleFacturaVentaController extends Controller
             else
             {
                 $detalleFactura = new DetalleFacturasVenta();
-                $detalleFactura->factura = $data['factura'];
-                $detalleFactura->producto = $data['producto'];
+                $detalleFactura->factura_venta_id = $data['factura_venta_id'];
+                $detalleFactura->producto_id = $data['producto_id'];
                 $detalleFactura->cantidad = $data['cantidad'];
-                $detalleFactura->precio_unitario = $data['precio_unitario'];
-                $detalleFactura->precio_total = $data['precio_total'];
+                $detalleFactura->precio_Unitario = $data['precio_Unitario'];
+                $detalleFactura->subtotal = $data['subtotal'];
                 $detalleFactura->save();
 
 
                 $response['status'] = 'success';
-                $response['code'] = 201;
+                $response['code'] = 200;
                 $response['message'] = 'Detalle de Factura de Venta almacenado satisfactoriamente';
             }
         }
@@ -132,10 +133,10 @@ class DetalleFacturaVentaController extends Controller
 
             $rules = [
                 'id' => 'required',
-                'producto' => 'required',
+                'producto_id' => 'required',
                 'cantidad' => 'required',
-                'precio_unitario' => 'required',
-                'precio_total' => 'required'
+                'precio_Unitario' => 'required',
+                'subtotal' => 'required'
             ];
 
             $validate = \validator($data, $rules);
@@ -150,7 +151,7 @@ class DetalleFacturaVentaController extends Controller
             {
                 $id = $data['id'];
                 unset($data['id']);
-                unset($data['factura']);
+                unset($data['factura_venta_id']);
 
                 $updated = DetalleFacturasVenta::where('id', $id)->update($data);
 

@@ -36,8 +36,8 @@ class ProveedoresProductosController extends Controller
                 $data  = array_map('trim',$data);
 
                 $rules = [
-                    'id_proveedor' => 'required',
-                    'id_producto' => 'required'
+                    'proveedor_id' => 'required',
+                    'producto_id' => 'required'
                 ];
 
                 $validate = \Validator::make($data,$rules);
@@ -50,8 +50,8 @@ class ProveedoresProductosController extends Controller
                 else
                 {
                     $proveedorProducto = new ProveedorProducto();
-                    $proveedorProducto->id_proveedor = $data['id_proveedor'];
-                    $proveedorProducto->id_producto = $data['id_producto'];
+                    $proveedorProducto->proveedor_id = $data['proveedor_id'];
+                    $proveedorProducto->producto_id = $data['producto_id'];
 
                     $proveedorProducto->save();
 

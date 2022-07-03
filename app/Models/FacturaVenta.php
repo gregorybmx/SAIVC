@@ -10,19 +10,18 @@ class FacturaVenta extends Model
     use HasFactory;
     protected $table = 'factura_venta';
     protected $fillable = 
-    ['vendedor', 
-    'fecha_Venta',
+    ['user_id', 
     'subtotal',
     'iva', 
     'total'];
 
-    public function facturaVenta()
+    public function vendedor()
     {
-        return $this -> belongsTo('App\Models\User','id');
+        return $this -> belongsTo('App\Models\User','user_id');
     }
 
-    public function detalleFacturasVenta()
+    public function detalleFactura()
     {
-        return $this -> hasMany('App\Models\DetalleFacturasVenta', 'id');
+        return $this -> hasMany('App\Models\DetalleFacturasVenta');
     }
 }

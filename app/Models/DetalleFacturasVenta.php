@@ -10,19 +10,19 @@ class DetalleFacturasVenta extends Model
     use HasFactory;
     protected $table = 'detalle_factura_ventas';
     protected $fillable = [
-        'factura', 
-        'producto', 
+        'factura_venta_id', 
+        'producto_id', 
         'cantidad', 
         'precio_Unitario', 
-        'precio_Total'];
+        'subtotal'];
 
     public  function facturaVenta()
     {
-        return $this -> belongsTo('App\Models\FacturaVenta', 'numeroFactura');
+        return $this -> belongsTo('App\Models\FacturaVenta', 'factura_venta_id');
     }
 
     public  function producto()
     {
-        return $this -> belongsTo('App\Models\Producto', 'codigo');
+        return $this -> belongsTo('App\Models\Producto', 'producto_id');
     }
 }

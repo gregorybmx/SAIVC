@@ -19,9 +19,13 @@ class Producto extends Model
         'stock'
 ];
 
-public function detalleFacturaVenta(){
-    return $this->hasMany('App\Models\DetalleFacturasVenta');
-}
+    public function detalleFacturaVenta()
+    {
+        return $this->hasMany('App\Models\DetalleFacturasVenta');
+    }
 
-
+    public function proveedorProducto()
+    {
+        return $this->hasMany('App\Models\ProveedoresProductos');
+    }
 }

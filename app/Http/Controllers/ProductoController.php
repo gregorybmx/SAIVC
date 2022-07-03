@@ -50,8 +50,9 @@ class ProductoController extends Controller
         );
 
         $data=Producto::find($id);
-        if(is_object($data)>0)
+        if(is_object($data))
         {
+            $data=$data->load('proveedorProducto');
             $response['status'] = 'success';
             $response['code'] = 200;
             $response['data'] = $data;

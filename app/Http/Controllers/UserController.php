@@ -18,7 +18,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('api.auth',['except'=>['index','show','login', 'update','store', 'detroy','getIdentity','getImage', 'uploadImage']]);
+        $this->middleware('api.auth',['except'=>['index','show','login', 'update','store', 'destroy','getIdentity','getImage', 'uploadImage']]);
     }
     
     public function __invoke(){
@@ -54,6 +54,7 @@ class UserController extends Controller
 
             if(is_object($user))
             {
+                $user = $user->load('facturaVenta');
                 $response['status'] = 'success';
                 $response['code'] = 200;
                 $response['data'] = $user;
@@ -99,7 +100,7 @@ class UserController extends Controller
             if($validate->fails()) 
             {
                 $response['code'] = 404;
-                $response['menssage'] = 'El usuario no se ha creado';
+                $response['message'] = 'El usuario no se ha creado';
                 $response['errors'] = $validate->errors();
             } 
         

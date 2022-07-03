@@ -17,16 +17,16 @@ class FacturaVentaController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('api.auth',['except'=>['show','store']]);
+        $this->middleware('api.auth',['except'=>['show','store', 'index']]);
     }
 
     //Index -> Devuelve todos los elementos mediante el metodo Get
     public function index()
     {
         $response = array(
-            'status' => 'error',
-            'code' => 404,
-            'data' => 'No se han agregado registros'
+            'status' => 'success',
+            'code' => '204',
+            'data'=>'No se han agregado registros'
         );
 
         $data = FacturaVenta::all(); //obtengo el arreglo de todos las Facturas venta
@@ -54,7 +54,7 @@ class FacturaVentaController extends Controller
 
         if (is_object($facturaVenta))
         {
-            //$facturaVenta = $facturaVenta -> load('detalle_factura_ventas');
+            $facturaVenta = $facturaVenta -> load('vendedor','detalleFactura');
             $response['status'] = 'success';
             $response['code'] = 200;
             $response['data'] = $facturaVenta;
@@ -80,8 +80,7 @@ class FacturaVentaController extends Controller
 
 
             $rules = [
-                'vendedor' => 'required',
-                'fecha_venta' => 'required',
+                'user_id' => 'required',
                 'subtotal' => 'required',
                 'iva' => 'required',
                 'total' => 'required'
@@ -97,8 +96,7 @@ class FacturaVentaController extends Controller
             else
             {
                 $facturaVenta = new FacturaVenta();
-                $facturaVenta->vendedor = $data['vendedor'];
-                $facturaVenta->fecha_venta = $data['fecha_venta'];
+                $facturaVenta->user_id = $data['user_id'];
                 $facturaVenta->subtotal = $data['subtotal'];
                 $facturaVenta->iva = $data['iva'];
                 $facturaVenta->total = $data['total'];
@@ -106,6 +104,7 @@ class FacturaVentaController extends Controller
 
                 $response['status'] = 'success';
                 $response['code'] = 201;
+                $response['data'] = $facturaVenta;
                 $response['message'] = 'Factura de Venta almacenada satisfactoriamente';
             }
         }
@@ -147,7 +146,7 @@ class FacturaVentaController extends Controller
             {
                 $id = $data['id'];
                 unset($data['id']);
-                unset($data['vendedor']);
+                unset($data['user_id']);
                 unset($data['fecha_venta']);
 
                 $updated = FacturaVenta::where('id', $id)->update($data);

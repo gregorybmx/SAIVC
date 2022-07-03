@@ -50,6 +50,7 @@ class FacturaCompraController extends Controller
 
         if(is_object($data))
         {
+            $data = $data->load('proveedor', 'abonoFactura');
             $response ['status'] = 'success';
             $response ['code'] = 200;
             $response ['data'] = $data;
@@ -79,7 +80,7 @@ class FacturaCompraController extends Controller
 
                 $rules = [
                     'id' => 'required',
-                    'proveedor' => 'required',
+                    'proveedor_id' => 'required',
                     'fecha_Compra' => 'required',
                     'fecha_Vencimiento' => 'required',
                     'monto_Total' => 'required',
@@ -96,7 +97,7 @@ class FacturaCompraController extends Controller
                 {
                     $compra = new FacturaCompra();
                     $compra->id = $data['id'];
-                    $compra->proveedor = $data['proveedor'];
+                    $compra->proveedor_id = $data['proveedor_id'];
                     $compra->fecha_Compra = $data['fecha_Compra'];
                     $compra->fecha_Vencimiento = $data['fecha_Vencimiento'];
                     $compra->monto_Total = $data['monto_Total'];
@@ -115,68 +116,6 @@ class FacturaCompraController extends Controller
         }
 
         return response()->json($response,$response['code']);
-    }
-
-    //modifica un elemento mediante PUT
-    public function update(Request $request)
-    {
-        $response = array(
-            'status' => 'error',
-            'code' => 406,
-            'message' => 'No se ha enviado el archivo con la informacion necesaria'
-        );
-
-        $json = $request->input('json',null);
-
-        if($json)
-        {
-            $data = json_decode($json, true);
-
-            var_dump($data);
-
-            $data = array_map('trim', $data);
-
-            $rules = [
-                'id' => 'required',
-                'proveedor' => 'required',
-                'fecha_Compra' => 'required',
-                'fecha_Vencimiento' => 'required',
-                'monto_Total' => 'required',
-            ];
-
-            $validate = \validator($data, $rules);
-
-            if ($validate->fails())
-            {
-                $response['message'] = 'Error al eviar los datos';
-                $response['errors'] = $validate->errors();
-            }
-
-            else
-            {
-                $id = $data['id'];
-                unset($data['id']);
-                unset($data['created_at']);
-                unset($data['updated_at']);
-
-                $updated = FacturaCompra::where('id', $id)->update($data);
-
-                if ($updated > 0)
-                {
-                    $response['status'] = 'success';
-                    $response['code'] = 200;
-                    $response['message'] = 'Datos actualizados correctamente';
-                }
-
-                else
-                {
-                    $response['code'] = 404;
-                    $response['message'] = 'Error al actualizar los datos';
-                }
-            }
-
-            return response()->json($response,$response['code']);
-        }
     }
 
     //elimina un elemento mediante DELETE
