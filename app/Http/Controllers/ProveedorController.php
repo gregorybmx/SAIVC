@@ -152,6 +152,8 @@ class ProveedorController extends Controller
             {
                 $produc = $data['id']; 
                 unset($data['id']);
+                unset($data['created_at']);
+                unset($data['updated_at']);
 
                 $updated = Proveedores::where('id', $produc)->update($data);
 
@@ -164,7 +166,7 @@ class ProveedorController extends Controller
 
                 else
                 {
-                    $response ['code'] = 404;
+                    $response ['code'] = 304;
                     $response ['message'] = 'Error al actualizar los datos';
                 }
             }
