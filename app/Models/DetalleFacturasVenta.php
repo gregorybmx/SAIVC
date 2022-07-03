@@ -11,7 +11,8 @@ class DetalleFacturasVenta extends Model
     protected $table = 'detalle_factura_ventas';
     protected $fillable = [
         'factura_venta_id', 
-        'producto_id', 
+        'producto_id',
+        'descripcion', 
         'cantidad', 
         'precio_Unitario', 
         'subtotal'];

@@ -24,7 +24,7 @@ class JwtAuth{
                 'role' => $user->role,
                 'image' => $user->image,
                 'iat' => time(),
-                'exp' => time()+(120)
+                'exp' => time()+(3600)
             );
 
             $data=JWT::encode($token,$this->key,'HS256');

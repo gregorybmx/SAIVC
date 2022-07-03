@@ -17,7 +17,7 @@ class DetalleFacturaVentaController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('api.auth',['except'=>['show','store', 'index']]);
+        $this->middleware('api.auth');
     }
 
     //Index -> Devuelve todos los elementos mediante el metodo Get
@@ -82,6 +82,7 @@ class DetalleFacturaVentaController extends Controller
                 'factura_venta_id' => 'required',
                 'producto_id' => 'required',
                 'cantidad' => 'required',
+                'descripcion'=> 'required',
                 'precio_Unitario' => 'required',
                 'subtotal' => 'required'
             ];
@@ -99,6 +100,7 @@ class DetalleFacturaVentaController extends Controller
                 $detalleFactura = new DetalleFacturasVenta();
                 $detalleFactura->factura_venta_id = $data['factura_venta_id'];
                 $detalleFactura->producto_id = $data['producto_id'];
+                $detalleFactura->descripcion = $data['descripcion'];
                 $detalleFactura->cantidad = $data['cantidad'];
                 $detalleFactura->precio_Unitario = $data['precio_Unitario'];
                 $detalleFactura->subtotal = $data['subtotal'];
@@ -135,6 +137,7 @@ class DetalleFacturaVentaController extends Controller
                 'id' => 'required',
                 'producto_id' => 'required',
                 'cantidad' => 'required',
+                'descripcion'=> 'required',
                 'precio_Unitario' => 'required',
                 'subtotal' => 'required'
             ];

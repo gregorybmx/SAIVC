@@ -18,7 +18,7 @@ class FacturaCompraController extends Controller
 
     public function _construct()
     {
-        $this->middleware('api.auth',['except'=>['show','store']]);
+        $this->middleware('api.auth');
     }
  // devuelve todos los elementos mediasnte GET
     public function index(){

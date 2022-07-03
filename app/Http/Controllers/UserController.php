@@ -18,7 +18,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('api.auth',['except'=>['index','show','login', 'update','store', 'destroy','getIdentity','getImage', 'uploadImage']]);
+        $this->middleware('api.auth',['except'=>['login','getImage', 'uploadImage']]);
     }
     
     public function __invoke(){
@@ -119,7 +119,7 @@ class UserController extends Controller
                 
                 $response['status'] = 'success';
                 $response['code'] = 200;
-                $response['menssage'] = 'El usuario se ha creado';
+                $response['message'] = 'El usuario se ha creado';
                 $response['username'] = $user;
             }
         }
