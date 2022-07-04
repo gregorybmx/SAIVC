@@ -74,7 +74,7 @@ class UserController extends Controller
     {
         $response = array(
             'status' => 'error',
-            'code' => 406,
+            'code' => 409,
             'message' => 'No se ha enviado el archivo con la informacion necesaria'
         );
 
@@ -131,7 +131,7 @@ class UserController extends Controller
     {
         $response = array(
             'status' => 'error',
-            'code' => 406,
+            'code' => 409,
             'message' => 'No se ha enviado el archivo con la informacion necesaria'
         );
 
@@ -154,13 +154,7 @@ class UserController extends Controller
         
             $valid=\validator($data,$rules);
             
-            if($valid->fails())
-            {
-                $response['message'] = 'Datos incorrectos';
-                $response['errors'] = $valid->errors();
-            } 
-            
-            else
+            if(!($valid->fails()))
             {
                 $email = $data['email'];
 
@@ -185,6 +179,10 @@ class UserController extends Controller
                     $response['code'] = 400;
                     $response['message'] = 'Error al actualizar los datos';
                 }
+            }
+            else
+            {
+                $response['errors'] = $valid->errors();
             }
         }
         
@@ -230,7 +228,7 @@ class UserController extends Controller
         {
             $response=array(
                 'status'=>'error',
-                'code'=>406,
+                'code'=>400,
                 'message'=>'Error al guardar imagen',
                 'error' => $valid -> errors()
             );
@@ -278,7 +276,7 @@ class UserController extends Controller
         if($valid->fails()){
             $response=array(
                 'status'=>'error',
-                'code'=>406,
+                'code'=>400,
                 'message'=>'Los datos enviados son incorrectos',
                 'errors'=>$valid->errors()
             );
@@ -301,7 +299,7 @@ class UserController extends Controller
         else{
             $response=array(
                 'status'=>'error',
-                'code'=>406,
+                'code'=>404,
                 'message'=>'token no encontrado'
             );
         }
