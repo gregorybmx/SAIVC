@@ -22,7 +22,7 @@ class ProductoController extends Controller
     public function index()
     {
         $response=array(
-            'status' => 'success',
+            'status' => 'error',
             'code' => '404',
             'data'=>'No se han agregado registros'
         );

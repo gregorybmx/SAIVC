@@ -24,8 +24,8 @@ class FacturaVentaController extends Controller
     public function index()
     {
         $response = array(
-            'status' => 'success',
-            'code' => '204',
+            'status' => 'error',
+            'code' => '404',
             'data'=>'No se han agregado registros'
         );
 
@@ -50,14 +50,23 @@ class FacturaVentaController extends Controller
             'data' => 'Recurso no encontrado'
         );
 
-        $facturaVenta = FacturaVenta::find($id);
-
-        if (is_object($facturaVenta))
+        if(isset($id))
         {
-            $facturaVenta = $facturaVenta -> load('vendedor','detalleFactura');
-            $response['status'] = 'success';
-            $response['code'] = 200;
-            $response['data'] = $facturaVenta;
+            $facturaVenta = FacturaVenta::find($id);
+
+            if (is_object($facturaVenta))
+            {
+                $facturaVenta = $facturaVenta -> load('vendedor','detalleFactura');
+                $response['status'] = 'success';
+                $response['code'] = 200;
+                $response['data'] = $facturaVenta;
+            }
+        }
+
+        else
+        {    
+            $response['code'] = 409;
+            $response['data'] = 'No se ha ingresado el Id deseado';
         }
 
         return response()->json($response, $response['code']);
@@ -68,7 +77,7 @@ class FacturaVentaController extends Controller
     {
         $response = array(
             'status' => 'error',
-            'code' => 406,
+            'code' => 409,
             'message' => 'No se ha enviado el archivo con la informacion necesaria'
         );
 
@@ -89,7 +98,6 @@ class FacturaVentaController extends Controller
             $validate = \validator($data, $rules);
 
             if ($validate->fails()) {
-                $response['message'] = 'Datos enviados no cumplen con las reglas establecidas ';
                 $response['errors'] = $validate->errors();
             }
 
@@ -103,7 +111,7 @@ class FacturaVentaController extends Controller
                 $facturaVenta->save();
 
                 $response['status'] = 'success';
-                $response['code'] = 201;
+                $response['code'] = 200;
                 $response['data'] = $facturaVenta;
                 $response['message'] = 'Factura de Venta almacenada satisfactoriamente';
             }
@@ -117,7 +125,7 @@ class FacturaVentaController extends Controller
     {
         $response = array(
             'status' => 'error',
-            'code' => 406,
+            'code' => 409,
             'message' => 'No se ha enviado el archivo con la informacion necesaria'
         );
 
@@ -138,7 +146,6 @@ class FacturaVentaController extends Controller
 
             if ($validate->fails())
             {
-                $response['message'] = 'Los datos enviados son incorrectos';
                 $response['errors'] = $validate->errors();
             }
 
@@ -173,7 +180,7 @@ class FacturaVentaController extends Controller
 
         $response=array(
             'status'=>'error',
-            'code'=>404,
+            'code'=>409,
             'message'=>'Falta el identificador de la Factura de Venta'
         );
 

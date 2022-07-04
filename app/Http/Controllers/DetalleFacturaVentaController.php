@@ -50,14 +50,23 @@ class DetalleFacturaVentaController extends Controller
             'data' => 'Recurso no encontrado'
         );
 
-        $detalleFactura = DetalleFacturasVenta::find($id);
-
-        if(is_object($detalleFactura))
+        if(isset($id))
         {
-            $detalleFactura = $detalleFactura -> load('facturaVenta', 'producto');
-            $response['status'] = 'success';
-            $response['code'] = 200;
-            $response['data'] = $detalleFactura;
+            $detalleFactura = DetalleFacturasVenta::find($id);
+
+            if(is_object($detalleFactura))
+            {
+                $detalleFactura = $detalleFactura -> load('facturaVenta', 'producto');
+                $response['status'] = 'success';
+                $response['code'] = 200;
+                $response['data'] = $detalleFactura;
+            }
+        }
+
+        else
+        {            
+            $response['code'] = 409;
+            $response['data'] = 'No se ha ingresado el Id deseado';
         }
 
         return response()->json($response, $response['code']);
@@ -68,7 +77,7 @@ class DetalleFacturaVentaController extends Controller
     {
         $response = array(
             'status' => 'error',
-            'code' => 406,
+            'code' => 409,
             'message' => 'No se ha enviado el archivo con la informacion necesaria'
         );
 
@@ -91,7 +100,6 @@ class DetalleFacturaVentaController extends Controller
 
             if ($validate->fails())
             {
-                $response['message'] = 'Datos enviados no cumplen con las reglas establecidas ';
                 $response['errors'] = $validate->errors();
             }
 
@@ -105,7 +113,6 @@ class DetalleFacturaVentaController extends Controller
                 $detalleFactura->precio_Unitario = $data['precio_Unitario'];
                 $detalleFactura->subtotal = $data['subtotal'];
                 $detalleFactura->save();
-
 
                 $response['status'] = 'success';
                 $response['code'] = 200;
@@ -121,7 +128,7 @@ class DetalleFacturaVentaController extends Controller
     {
         $response = array(
             'status' => 'error',
-            'code' => 406,
+            'code' => 409,
             'message' => 'No se ha enviado el archivo con la informacion necesaria'
         );
 
@@ -182,7 +189,7 @@ class DetalleFacturaVentaController extends Controller
         {
             $response=array(
                 'status'=>'error',
-                'code'=>404,
+                'code'=>409,
                 'message'=>'Falta el identificador del Detalle de Factura'
             );
 

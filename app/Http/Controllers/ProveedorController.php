@@ -21,7 +21,7 @@ class ProveedorController extends Controller
 
     public function index(){
         $response=array(
-            'status' => 'success',
+            'status' => 'error',
             'code' => '404',
             'data'=>'No se han agregado registros'
         );
@@ -45,13 +45,22 @@ class ProveedorController extends Controller
             'message'=>'Registro no encontrado'
         );
 
-        $data=Proveedores::find($id);
-
-        if(is_object($data))
+        if(isset($id))
         {
-            $response ['status'] ='success';
-            $response ['code'] = 200;
-            $response ['data'] = $data;
+            $data=Proveedores::find($id);
+
+            if(is_object($data))
+            {
+                $response ['status'] ='success';
+                $response ['code'] = 200;
+                $response ['data'] = $data;
+            }
+        }
+        else
+        {   
+            $response ['code'] = 409;
+            $response ['message'] = 'No se ha ingresado el Id deseado';
+            
         }
 
         return response()->json($response,$response['code']);
@@ -61,7 +70,7 @@ class ProveedorController extends Controller
     {
         $response = array(
             'status' => 'error',
-            'code' => 406,
+            'code' => 409,
             'message' => 'No se ha enviado el archivo con la informacion necesaria'
         );
 
@@ -85,13 +94,7 @@ class ProveedorController extends Controller
 
                 $validate=\validator($data,$rules);
 
-                if($validate->fails())
-                {
-                    $response ['message'] ='Error al enviar los datos';
-                    $response ['errors'] = $validate->errors();
-                }
-
-                else
+                if(!($validate->fails()))
                 {
                     $probe = new Proveedores();
                     $probe -> id = $data['id'];
@@ -106,12 +109,10 @@ class ProveedorController extends Controller
                     $response ['code'] = 200;
                     $response ['message'] = 'Datos almacenados correctamente';
                 }
-            }
-
-            else
-            {
-                $response ['code'] = 404;
-                $response ['message'] = 'Faltan datos';
+                else
+                {
+                    $response ['errors'] = $validate->errors();
+                }
             }
         }
 
@@ -123,7 +124,7 @@ class ProveedorController extends Controller
     {
         $response = array(
             'status' => 'error',
-            'code' => 406,
+            'code' => 409,
             'message' => 'No se ha enviado el archivo con la informacion necesaria'
         );
 
@@ -166,12 +167,11 @@ class ProveedorController extends Controller
 
                 else
                 {
-                    $response ['code'] = 304;
+                    $response ['code'] = 400;
                     $response ['message'] = 'Error al actualizar los datos';
                 }
             }
         }
-
         return response()->json($response,$response['code']);
     }
 
@@ -179,7 +179,7 @@ class ProveedorController extends Controller
     {
         $response = array(
             'status' => 'error',
-            'code' => 401,
+            'code' => 409,
             'message' => 'Faltan elementos'
         );
 

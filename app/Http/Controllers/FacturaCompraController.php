@@ -23,7 +23,7 @@ class FacturaCompraController extends Controller
  // devuelve todos los elementos mediasnte GET
     public function index(){
         $response=array(
-            'status' => 'success',
+            'status' => 'error',
             'code' => '404',
             'data'=>'No se han agregado registros'
         );
@@ -45,15 +45,22 @@ class FacturaCompraController extends Controller
             'code'=>404,
             'data'=>'Registro no encontrado'
         );
-
-        $data=FacturaCompra::find($id);
-
-        if(is_object($data))
+        if(isset($id))
         {
-            $data = $data->load('proveedor', 'abonoFactura');
-            $response ['status'] = 'success';
-            $response ['code'] = 200;
-            $response ['data'] = $data;
+            $data=FacturaCompra::find($id);
+
+            if(is_object($data))
+            {
+                $data = $data->load('proveedor', 'abonoFactura');
+                $response ['status'] = 'success';
+                $response ['code'] = 200;
+                $response ['data'] = $data;
+            }
+        }
+        else
+        {            
+            $response['code'] = 409;
+            $response['data'] = 'No se ha ingresado el Id deseado';
         }
 
         return response()->json($response,$response['code']);
@@ -64,7 +71,7 @@ class FacturaCompraController extends Controller
     {
         $response = array(
             'status' => 'error',
-            'code' => 406,
+            'code' => 409,
             'message' => 'No se ha enviado el archivo con la informacion necesaria'
         );
 
@@ -123,7 +130,7 @@ class FacturaCompraController extends Controller
     {
         $response = array(
             'status' => 'error',
-            'code' => 401,
+            'code' => 409,
             'message' => 'Faltan elementos'
         );
 

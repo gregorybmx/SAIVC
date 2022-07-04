@@ -48,15 +48,24 @@ class AbonoFacturaController extends Controller
             'message'=>'Registro no encontrado'
         );
 
-        $data=AbonoFactura::find($id);
+        if(isset($id))
+        {
+            $data=AbonoFactura::find($id);
 
-        if(is_object($data)){
+            if(is_object($data)){
 
-            $data = $data->load('facturaCompra');
+                $data = $data->load('facturaCompra');
 
-            $response ['status'] = 'success';
-            $response ['code'] = 200;
-            $response ['data'] = $data;
+                $response ['status'] = 'success';
+                $response ['code'] = 200;
+                $response ['data'] = $data;
+            }
+        }
+
+        else
+        {
+            $response['code'] = 409;
+            $response['data'] = 'No se ha ingresado el Id deseado';
         }
 
         return response()->json($response,$response['code']);
@@ -68,7 +77,7 @@ class AbonoFacturaController extends Controller
     {
         $response = array(
             'status' => 'error',
-            'code' => 406,
+            'code' => 409,
             'message' => 'No se ha enviado el archivo con la informacion necesaria'
         );
 
@@ -93,7 +102,6 @@ class AbonoFacturaController extends Controller
 
                 if ($validate->fails())
                 {
-                    $response ['message'] = 'Error al enviar los datos';
                     $response ['errors'] = $validate->errors();
                 }
 
@@ -108,14 +116,9 @@ class AbonoFacturaController extends Controller
                     $abono->save();
 
                     $response ['status'] = 'success';
-                    $response ['code'] = '200';
+                    $response ['code'] = 200;
                     $response ['message'] = 'Datos alamacenados correctamente';
                 }
-            }
-
-            else {
-                $response ['code'] = 400;
-                $response ['message'] = 'Faltan Datos';
             }
         }
 
@@ -127,7 +130,7 @@ class AbonoFacturaController extends Controller
     {
         $response = array(
             'status' => 'error',
-            'code' => 406,
+            'code' => 409,
             'message' => 'No se ha enviado el archivo con la informacion necesaria'
         );
 
@@ -176,14 +179,11 @@ class AbonoFacturaController extends Controller
 
                     else
                     {
-                        $response ['code'] = 404;
+                        $response ['code'] = 400;
                         $response ['message'] = 'Error al actualizar los datos';
                     }
                 }
-            } else {
-                $response ['code'] = 400;
-                $response ['message'] = 'Faltan Datos';
-            }
+            } 
         }
         return response()->json($response,$response['code']);
     }
@@ -193,7 +193,7 @@ class AbonoFacturaController extends Controller
     {
         $response = array(
             'status' => 'error',
-            'code' => 401,
+            'code' => 409,
             'message' => 'Faltan elementos'
         );
 

@@ -28,7 +28,7 @@ class UserController extends Controller
         $response = array(
             'status' => 'error',
             'code' => '404',
-            'data' => 'No se han agregado registros'
+            'message' => 'No se han agregado registros'
         );
 
         $data = User::all();
@@ -64,7 +64,7 @@ class UserController extends Controller
         else
         {
             $response['code'] = 409;
-            $response['data'] = 'No se ha ingresado el Id deseado';
+            $response['message'] = 'No se ha ingresado el Id deseado';
         }
 
         return response() -> json($response, $response['code']);
@@ -276,7 +276,7 @@ class UserController extends Controller
         if($valid->fails()){
             $response=array(
                 'status'=>'error',
-                'code'=>400,
+                'code'=>409,
                 'message'=>'Los datos enviados son incorrectos',
                 'errors'=>$valid->errors()
             );
