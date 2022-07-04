@@ -23,7 +23,7 @@ class ProductoController extends Controller
     {
         $response=array(
             'status' => 'success',
-            'code' => '204',
+            'code' => '404',
             'data'=>'No se han agregado registros'
         );
 
@@ -49,15 +49,23 @@ class ProductoController extends Controller
 
         );
 
-        $data=Producto::find($id);
-        if(is_object($data))
+        if(isset($id))
         {
-            $data=$data->load('proveedorProducto');
-            $response['status'] = 'success';
-            $response['code'] = 200;
-            $response['data'] = $data;
+            $data=Producto::find($id);
+            if(is_object($data))
+            {
+                $data=$data->load('proveedorProducto');
+                $response['status'] = 'success';
+                $response['code'] = 200;
+                $response['data'] = $data;
+            }
         }
 
+        else
+        {
+            $response['code'] = 409;
+            $response['data'] = 'No se ha ingresado el Id deseado';
+        }
         return response()->json($response,$response['code']);
     }
 
@@ -65,7 +73,7 @@ class ProductoController extends Controller
     {
         $response = array(
             'status' => 'error',
-            'code' => 406,
+            'code' => 409,
             'message' => 'No se ha enviado el archivo con la informacion necesaria'
         );
 
@@ -111,12 +119,6 @@ class ProductoController extends Controller
                     $response ['message'] = 'Datos almacenados correctamente';
                 }
             } 
-            
-            else 
-            {
-                $response ['code'] = 404;
-                $response ['message'] = 'Faltan datos';
-            }
         }
 
         return response()->json($response,$response['code']);
@@ -126,7 +128,7 @@ class ProductoController extends Controller
     {
         $response = array(
             'status' => 'error',
-            'code' => 406,
+            'code' => 409,
             'message' => 'No se ha enviado el archivo con la informacion necesaria'
         );
 
@@ -147,13 +149,8 @@ class ProductoController extends Controller
 
             $validate = \validator($data, $rules);
 
-            if ($validate->fails()) {
-                $response ['message'] = 'Error al enviar los datos';
-                $response ['errors'] = $validate->errors();
-            }
-
-            else
-            {
+            if (!($validate->fails())) 
+            {       
                 $produc = $data['id']; //duda si va o nelson
                 
                 unset($data['id']);
@@ -171,9 +168,12 @@ class ProductoController extends Controller
 
                 else
                 {
-                    $response ['code'] = 304;
+                    $response ['code'] = 400;
                     $response ['message'] = 'Error al actualizar los datos';
                 }
+            }
+            else{
+                $response ['errors'] = $validate->errors();
             }
         }
 
@@ -184,7 +184,7 @@ class ProductoController extends Controller
     {
         $response = array(
             'status' => 'No Content',
-            'code' => 204,
+            'code' => 409,
             'message' => 'Faltan elementos datos'
         );
 
