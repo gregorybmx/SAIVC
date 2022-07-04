@@ -23,7 +23,7 @@ class AbonoFacturaController extends Controller
      // devuelve todos los elementos mediasnte GET
     public function index(){
         $response=array(
-            'status' => 'success',
+            'status' => 'error',
             'code' => '404',
             'data'=>'No se han agregado registros'
         );

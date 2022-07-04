@@ -17,7 +17,7 @@ class DetalleFacturaVentaController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('api.auth');
+        $this->middleware('api.auth',['except'=>['store']]);
     }
 
     //Index -> Devuelve todos los elementos mediante el metodo Get
