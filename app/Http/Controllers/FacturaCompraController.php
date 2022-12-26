@@ -138,7 +138,7 @@ class FacturaCompraController extends Controller
         {
             $deleted = FacturaCompra::where('id',$id)->delete();
             if($deleted){
-                $response ['status'] = 'succes';
+                $response ['status'] = 'success';
                 $response ['code'] = 200;
                 $response ['message'] = 'Elemento eliminado correctamente';
             }
