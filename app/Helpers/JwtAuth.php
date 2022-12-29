@@ -2,7 +2,6 @@
 namespace App\Helpers;
 use Firebase\JWT\JWT;
 use \Firebase\JWT\Key;
-use \Firebase\JWT\ExpiredException;
 use App\Models\User;
 
 class JwtAuth{
@@ -11,9 +10,9 @@ class JwtAuth{
         $this->key = 'jujasjasjasjijijas';
     }
     public function getToken($email,$password){
-        
+
         $user=User::where(['email'=>$email,'password'=>hash('sha256',$password)])->first();
-        
+
         if(is_object($user)){
             $token=array(
                 'sub' => $user->id,
@@ -22,7 +21,6 @@ class JwtAuth{
                 'last_name' => $user->last_name,
                 'image'=>$user->image,
                 'role' => $user->role,
-                'image' => $user->image,
                 'iat' => time(),
                 'exp' => time()+(3600)
             );
@@ -44,17 +42,17 @@ class JwtAuth{
             try{
                 $decoded=JWT::decode($jwt,new Key($this->key,'HS256'));
             }
-            
-            catch(\DomainException $ex)            
+
+            catch(\DomainException $ex)
             {
                 $auth=false;
             }
-            
+
             catch(\UnexpectedValueException $ex)
             {
                 $auth=false;
             }
-            
+
             catch(\ExpiredException $ex){
                 $auth=false;
             }

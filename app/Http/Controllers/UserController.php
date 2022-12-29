@@ -4,7 +4,7 @@
 Integrantes: Anthony Rugama,
             Carlos Reyes,
             Greivin Montoya,
-            Kendall Fallas 
+            Kendall Fallas
 */
 
 namespace App\Http\Controllers;
@@ -18,17 +18,17 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('api.auth',['except'=>['login','getImage', 'uploadImage']]);
+        //$this->middleware('api.auth',['except'=>['login']]);
     }
-    
+
     public function __invoke(){
 
     }
     public function index(){
         $response = array(
             'status' => 'error',
-            'code' => '404',
-            'message' => 'No se han agregado registros'
+            'code' => 404,
+            'data' => 'No se han agregado registros'
         );
 
         $data = User::all();
@@ -63,7 +63,7 @@ class UserController extends Controller
 
         else
         {
-            $response['code'] = 409;
+            $response['code'] = 400;
             $response['message'] = 'No se ha ingresado el Id deseado';
         }
 
@@ -74,12 +74,12 @@ class UserController extends Controller
     {
         $response = array(
             'status' => 'error',
-            'code' => 409,
+            'code' => 400,
             'message' => 'No se ha enviado el archivo con la informacion necesaria'
         );
 
         $json = $request->input('json', null);
-        
+
         if($json)
         {
             $data = json_decode($json, true);
@@ -91,19 +91,19 @@ class UserController extends Controller
                 'role' => 'required',
                 'state' => 'required',
                 'email' => 'required|email|unique:users',
-                'state' => 'required',
-                'password' => 'required',
-                'image' => 'required',
+                'phone' => 'required',
+                'address' => 'required',
+                'password' => 'required'
             ];
             $validate = \validator($data,$rules);
-            
-            if($validate->fails()) 
+
+            if($validate->fails())
             {
                 $response['code'] = 404;
                 $response['message'] = 'El usuario no se ha creado';
                 $response['errors'] = $validate->errors();
-            } 
-        
+            }
+
             else
             {
                 $user = new User();
@@ -114,9 +114,10 @@ class UserController extends Controller
                 $user->state= $data['state'];
                 $user->password= hash('sha256',$data['password']);;
                 $user->role = $data['role'];
-                $user->image = $data['image'];
+                $user->phone = $data['phone'];
+                $user->address = $data['address'];
                 $user->save();
-                
+
                 $response['status'] = 'success';
                 $response['code'] = 200;
                 $response['message'] = 'El usuario se ha creado';
@@ -141,19 +142,21 @@ class UserController extends Controller
         {
             $data=json_decode($json,true);
             $data=array_map('trim',$data);
-            
+
             $rules = [
                 'id' => 'required',
                 'name' => 'required|alpha',
-                'last_name' => 'required|alpha',
+                'last_name' => 'required',
                 'role' => 'required',
-                'email' => 'required|email',
                 'state' => 'required',
-                'password' => 'required',
+                'email' => 'required|email|unique:users',
+                'phone' => 'required',
+                'address' => 'required',
+                'password' => 'required'
             ];
-        
+
             $valid=\validator($data,$rules);
-            
+
             if(!($valid->fails()))
             {
                 $email = $data['email'];
@@ -166,13 +169,13 @@ class UserController extends Controller
                 $data['password']= hash('sha256',$data['password']);
 
                 $updated=User::where('email',$email)->update($data);
-                
+
                 if($updated>0)
                 {
                     $response['status'] = 'success';
                     $response['code'] = 200;
                     $response['message'] = 'Datos actualizados';
-                } 
+                }
 
                 else
                 {
@@ -185,7 +188,7 @@ class UserController extends Controller
                 $response['errors'] = $valid->errors();
             }
         }
-        
+
         return response()->json($response,$response['code']);
     }
 
@@ -198,16 +201,16 @@ class UserController extends Controller
         );
 
         if(isset($id)){
-            
+
             $deleted=User::where('id',$id)->delete();
-            
+
             if($deleted)
             {
                 $response['status'] = 'success';
                 $response['code'] = 200;
                 $response['message'] = 'Usuario eliminado';
             }
-            
+
             else
             {
                 $response['message'] = 'No se pudo eliminar';
@@ -215,55 +218,6 @@ class UserController extends Controller
         }
 
         return response()->json($response,$response['code']);
-    }
-
-    public function uploadImage(Request $request)
-    {
-        $image  = $request -> file('file0');
-        $valid = \Validator::make($request -> all(), [
-            'file0' => 'required|image|mimes:jpg,png'
-        ]);
-
-        if(!$image || $valid -> fails())
-        {
-            $response=array(
-                'status'=>'error',
-                'code'=>400,
-                'message'=>'Error al guardar imagen',
-                'error' => $valid -> errors()
-            );
-        }
-
-        else
-        { 
-            $filename = time().$image->getClientOriginalName();
-            \Storage::disk('users') -> put($filename, \File::get($image));
-            
-            $response=array(
-                'status'=>'success',
-                'code'=>200,
-                'message'=>'Imagen guardada correctamente',
-                'image_name' => $filename
-            );
-        }
-
-        return response() -> json($response, $response['code']);
-    }
-
-    public function getImage($filename)
-    {    
-        $exist=\Storage::disk('users')->exists($filename);
-        if($exist){
-            $file=\Storage::disk('users')->get($filename);
-            return new Response($file,200);
-        }else{
-            $response=array(
-                'status'=>'error',
-                'code'=>404,
-                'message'=>'Imagen no existe'
-            );
-            return response()->json($response,404);
-        }
     }
 
     public function login(Request $request){
@@ -295,7 +249,7 @@ class UserController extends Controller
         {
             $response=$jwtAuth->checkToken($token,true);
         }
-        
+
         else{
             $response=array(
                 'status'=>'error',

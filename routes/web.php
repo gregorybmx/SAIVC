@@ -22,11 +22,9 @@ use Illuminate\Support\Facades\Route;
 */
 Route::prefix('api')->group(function()
 {
-    Route::post('/user/upload',[UserController::class,'uploadImage']);
-    Route::get('/user/getimage/{filename}',[UserController::class, 'getImage']);
     Route::post('/user/login',[UserController::class, 'login']);
     Route::get('/user/getidentity',[UserController::class, 'getIdentity']);
-    
+
     //Rutas Automaticas RESTful
     Route::resource('/facturaventa', FacturaVentaController::class,['except'=>['create','edit']]);
     Route::resource('/detallefacturaventa', DetalleFacturaVentaController::class,['except'=>['create','edit']]);
